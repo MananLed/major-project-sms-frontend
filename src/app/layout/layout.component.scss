@@ -1,0 +1,42 @@
+@import "../shared/variables.scss";
+
+.sidebar {
+  width: 250px;
+  height: 603px;
+  background: $background-sidebar;
+  position: fixed;
+  left: 0;
+  padding: 1rem;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+h3{
+    margin-left: 6px;
+}
+
+.dashboard-content{
+    overflow: auto;
+    width: 1270px;
+    height: 600px;
+    margin-left: 245px;
+    background-image: url('https://t4.ftcdn.net/jpg/02/38/98/51/360_F_238985162_mSAmFi0yyZI4xQb6iwSJeW2SlaVtGFdt.jpg');
+}
+
+.nav{
+  margin-top: -2px;
+}
+
+.logout{
+  background-color: transparent;
+  color: red;
+  transition: all 0.3s ease;
+  width: 80px;
+  height: 40px;
+  border-radius: 6px;
+  border: 1px solid red;
+}
+
+.logout:hover {
+  background-color: red;
+  color: white;
+}

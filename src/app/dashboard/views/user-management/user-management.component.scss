@@ -1,0 +1,83 @@
+// $background-theme: aliceblue;
+// $danger-color: red;
+// $left-space: 260px;
+// $background-sidebar: #f8f9fa;
+// $curve: 6px;
+$table-width1: 82%;
+
+@import "../../../shared/variables.scss";
+
+.users{
+    display: flex;
+    margin-top: 0px;
+    gap: 123px;
+    margin-left: $left-space;
+}
+
+.residents, .officers{
+    margin-top: 15px;
+    border: 1px solid $background-theme;
+    border-radius: $curve;
+    // background-color: $background-theme;
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+    width: 34%;
+    height: 80px;
+}
+
+h3{
+    margin-left: 12px;
+    margin-top: 25px;
+}
+
+.page-wrapper{
+    margin-left: $left-space;
+    width: $table-width1;
+    margin-top: -40px;
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+    border-radius: $curve;
+}
+
+.officer-count, .resident-count{
+    width: 20px;
+    margin-left: 360px;
+    margin-top: -50px;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.addOfficer{
+    width: 120px;
+    margin-left: 900px;
+}
+
+#email, #password{
+    height: 40px;
+    border-radius: $curve;
+    width: 80%;
+}
+
+.buttons{
+    display: flex;
+    gap: 8px;
+    justify-content: right;
+}
+
+.remove{
+    background-color: white;
+    color: var(--p-button-danger-background);
+}
+
+.field-container {
+  margin-bottom: 20px;
+}
+
+.error-message-box {
+  min-height: 25px;
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 4px;
+}
+
+.error-message {
+  display: block;
+}

@@ -1,0 +1,272 @@
+<div class="parent">
+  <div class="buttons">
+    <p-button
+      pTooltip="Edit Profile"
+      icon="pi pi-pen-to-square"
+      (onClick)="showDialog()"
+    />
+    <p-button
+      pTooltip="Change Password"
+      severity="danger"
+      icon="pi pi-lock"
+      (onClick)="showDialogChangePassword()"
+    />
+    <p-button
+      pTooltip="Delete Profile"
+      severity="danger"
+      icon="pi pi-trash"
+      (onClick)="showDialogDeleteProfile()"
+    />
+  </div>
+
+  <div class="heading">
+    <h1>My Profile</h1>
+  </div>
+  <div class="container">
+    <div class="profile">
+      <div class="firstname">
+        <label for="firstname">First name</label>
+        <div class="detail">
+          {{ userDetails?.data?.first_name }}
+        </div>
+      </div>
+      <div class="lastname">
+        <label for="lastname">Last name</label>
+        <div class="detail">
+          {{ userDetails?.data?.last_name }}
+        </div>
+      </div>
+      <div class="middlename">
+        <label for="middlename">Middle name</label>
+        <div class="detail">
+          {{ userDetails?.data?.middle_name }}
+        </div>
+      </div>
+      <div class="mobile">
+        <label for="mobile">Mobile Number</label>
+        <div class="detail">
+          {{ userDetails?.data?.mobile_number }}
+        </div>
+      </div>
+      <div class="email">
+        <label for="email">Email</label>
+        <div class="edetail">
+          {{ userDetails?.data?.email }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-dialog
+  header="Update Profile"
+  (onHide)="hideDialog()"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '25rem' }"
+>
+  <form #updateProfileForm="ngForm">
+    <span class="p-text-secondary block mb-8">Enter the details</span>
+    <br /><br />
+    <div class="test">
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          id="firstname"
+          [(ngModel)]="firstname"
+          name="firstname"
+          autocomplete="off"
+        />
+        <label for="firstname">First name</label>
+      </p-floatlabel>
+      <br />
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          id="lastname"
+          [(ngModel)]="lastname"
+          name="lastname"
+          autocomplete="off"
+        />
+        <label for="firstname">Last name</label>
+      </p-floatlabel>
+      <br />
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          id="middlename"
+          [(ngModel)]="middlename"
+          name="middlename"
+          autocomplete="off"
+        />
+        <label for="firstname">Middle name</label>
+      </p-floatlabel>
+      <br />
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          id="email"
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          autocomplete="off"
+          required
+          email
+          #emailControl="ngModel"
+        />
+        <label for="email">Email</label>
+      </p-floatlabel>
+      <p-message
+        *ngIf="emailControl.invalid"
+        severity="error"
+        text="Invalid email format"
+      ></p-message>
+      <br />
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          id="mobile"
+          [(ngModel)]="mobile"
+          name="mobile"
+          autocomplete="off"
+        />
+        <label for="mobile">Mobile Number</label>
+      </p-floatlabel>
+    </div>
+    <br /><br />
+    <div class="buttons1">
+      <p-button
+        label="Cancel"
+        severity="contrast"
+        (onClick)="hideDialog()"
+      ></p-button>
+      <p-button
+        [disabled]="!email && !mobile && !lastname && !middlename && !firstname"
+        label="Update"
+        (onClick)="updateProfile()"
+      ></p-button>
+    </div>
+  </form>
+</p-dialog>
+
+<p-dialog
+  header="Update Password"
+  (onHide)="hideDialogChangePassword()"
+  [modal]="true"
+  [(visible)]="visibleChangePassword"
+  [style]="{ width: '25rem' }"
+>
+  <form #changePasswordForm="ngForm">
+    <br />
+    <div class="test">
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          id="oldPassword"
+          type="password"
+          [(ngModel)]="oldpassword"
+          name="oldpassword"
+          autocomplete="off"
+          required
+          #oldPasswordControl="ngModel"
+        />
+        <label for="oldPassword">Old Password</label>
+      </p-floatlabel>
+      <br />
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          id="newPassword"
+          type="password"
+          [(ngModel)]="newpassword"
+          name="newpassword"
+          autocomplete="off"
+          required
+          minlength="12"
+          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{12,}$"
+          #newPasswordControl="ngModel"
+        />
+        <label for="newPassword">New Password</label>
+      </p-floatlabel>
+      <p-message
+        *ngIf="newPasswordControl.errors?.['required'] && (newPasswordControl.dirty || newPasswordControl.touched)"
+        severity="error"
+        text="New password is required"
+      ></p-message>
+      <p-message
+        *ngIf="newPasswordControl.errors?.['minlength'] && (newPasswordControl.dirty || newPasswordControl.touched)"
+        severity="error"
+        text="Password must be at least 12 characters"
+      ></p-message>
+      <p-message
+        *ngIf="newPasswordControl.errors?.['pattern'] && (newPasswordControl.dirty || newPasswordControl.touched)"
+        severity="error"
+        text="Must contain 1 uppercase, 1 lowercase, 1 special and 1 number"
+      ></p-message>
+      <br />
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          id="confirmPassword"
+          type="password"
+          [(ngModel)]="confirmpassword"
+          name="confirmpassword"
+          autocomplete="off"
+          required
+          #confirmPasswordControl="ngModel"
+        />
+        <label for="confirmPassword">Confirm Password</label>
+      </p-floatlabel>
+      <p-message
+        *ngIf="
+          (confirmPasswordControl.dirty || confirmPasswordControl.touched)
+        "
+        severity="error"
+        text="Confirm password is required"
+      ></p-message>
+      <p-message
+        *ngIf="newpassword !== confirmpassword"
+        severity="error"
+        text="Passwords do not match"
+      ></p-message>
+    </div>
+    <br /><br />
+    <div class="buttons1">
+      <p-button
+        label="Cancel"
+        severity="contrast"
+        (onClick)="hideDialogChangePassword()"
+      ></p-button>
+      <p-button
+        [disabled]="newpassword !== confirmpassword"
+        label="Update"
+        (onClick)="updatePassword()"
+      ></p-button>
+    </div>
+  </form>
+</p-dialog>
+
+<p-dialog
+  header="Delete Profile"
+  [modal]="true"
+  [(visible)]="visibleDeleteProfile"
+  [style]="{ width: '25rem' }"
+>
+  <br />
+  <div class="test">
+    <p>Are you sure you want to delete your profile?</p>
+  </div>
+  <br /><br />
+  <div class="buttons1">
+    <p-button
+      label="No"
+      severity="contrast"
+      (onClick)="hideDialogDeleteProfile()"
+    ></p-button>
+    <p-button label="Yes" (onClick)="deleteProfile()"></p-button>
+  </div>
+</p-dialog>
+
+@if (isFetching()) {
+<app-loader></app-loader>
+}

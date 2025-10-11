@@ -1,0 +1,113 @@
+// $background-theme: aliceblue;
+// $danger-color: red;
+// $left-space: 260px;
+// $background-sidebar: #f8f9fa;
+// $curve: 6px;
+// $table-width: 1200px;
+
+@import "../../../shared/variables.scss";
+
+.requests{
+    display: flex;
+    gap: 48px;
+    margin-left: $left-space;
+    margin-top: 20px;
+}
+
+
+.total, .approved, .pending{
+    border: 1px solid $background-theme;
+    border-radius: $curve;
+    // background-color: $background-theme;
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+    width: 25%;
+    height: 90px;
+    display: flex;
+}
+
+h3{
+    margin-left: 12px;
+    margin-top: 30px;
+}
+
+.filter-requests{
+    margin-top: 22px;
+    margin-left: $left-space;
+    width: fit-content;
+    height: 160px;
+    border-radius: $curve;
+    padding: 1%;
+    // background-color: $background-theme;
+    border: 1px solid $background-theme;
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+}
+
+.bar{
+    margin-top: 30px;
+    display: flex;
+    gap: 10px;
+}
+
+.table{
+    margin-left: $left-space;
+    width: $table-width;
+}
+
+.total-count{
+    margin-top: 20px;
+    margin-left: 100px;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.pending-count{
+    margin-top: 20px;
+    margin-left: 75px;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.approved-count{
+    margin-top: 20px;
+    margin-left: 60px;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.actions{
+    display: flex;
+    gap: 8px;
+}
+
+.buttons{
+    display: flex;
+    gap: 8px;
+    justify-content: right;
+}
+
+.app{
+    border-radius: 14px;
+    width: 100px;
+    background-color: #adeaad;
+    color: darkgreen;
+    text-align: center;
+    padding: 4px;
+}
+
+.pen{
+    border-radius: 14px;
+    width: 100px;
+    text-align: center;
+    padding: 4px;
+    background-color: #f8c6d7;
+    color: #c61230;
+}
+
+.comp{
+    border-radius: 14px;
+    width: 120px;
+    text-align: center;
+    padding: 4px;
+    background-color: #e5dfe1;
+    color: #6c6868;
+}

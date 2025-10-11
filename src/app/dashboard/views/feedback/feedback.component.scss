@@ -1,0 +1,35 @@
+// $background-theme: aliceblue;
+// $danger-color: red;
+// $left-space: 260px;
+// $background-sidebar: #f8f9fa;
+// $curve: 6px;
+// $table-width: 1200px;
+
+@import "../../../shared/variables.scss";
+
+#feedback{
+    // width: 800px;
+    overflow: hidden;
+    // height: 37px;
+    border-radius: $curve;
+    margin-top: 30px;
+}
+
+.issueFeedback{
+    margin-top: -5px;
+    display: flex;
+    gap: 18px;
+    margin-left: $left-space;
+}
+
+.b1{
+    margin-top: 60px;
+}
+
+.card{
+    margin-top: 20px;
+    margin-left: $left-space;
+    width: $table-width;
+}
+
+

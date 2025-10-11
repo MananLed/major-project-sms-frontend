@@ -1,0 +1,235 @@
+<div class="loader-overlay" *ngIf="isFetching()">
+  <app-loader></app-loader>
+</div>
+
+<div class="heading">
+  <h1>UpKeepz</h1>
+  <p>Smart Maintenance System</p>
+</div>
+
+<div class="page-wrapper">
+  <p-card class="card-container">
+    <p-tabs [(value)]="activeTab">
+      <p-tablist>
+        <p-tab [value]="0">Login</p-tab>
+        <p-tab [value]="1">Sign Up</p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel [value]="0">
+          <div class="form-wrapper">
+            <div *ngIf="showError" class="error-box">
+              <p class="control-error">{{ errorMessage }}</p>
+            </div>
+
+            <div class="adjust">
+              <p-floatlabel variant="on" class="form-field">
+                <input
+                  pInputText
+                  id="Email"
+                  [(ngModel)]="email"
+                  autocomplete="on"
+                  required
+                  email
+                  #emailL="ngModel"
+                />
+                <label for="Email">Email<span class="required">*</span></label>
+              </p-floatlabel>
+            </div>
+
+            @if (emailL.touched && emailL.dirty && emailL.invalid) {
+            <p class="control-error">Invalid email address.</p>
+            }
+
+            <div class="adjust1">
+              <p-floatlabel variant="on" class="form-field">
+                <input
+                  type="password"
+                  pInputText
+                  id="Password"
+                  [(ngModel)]="password"
+                  autocomplete="off"
+                  required
+                  minlength="12"
+                  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{12,}$"
+                  #passwordL="ngModel"
+                />
+                <label for="Password" id="p"
+                  >Password<span class="required">*</span></label
+                >
+              </p-floatlabel>
+            </div>
+
+            @if (passwordL.touched && passwordL.dirty && passwordL.invalid) {
+            <p class="control-error">
+              Invalid password (Must have one small, one capital character, one
+              special character and one digit).
+            </p>
+            }
+            <br />
+            <p-button
+              [disabled]="isFetching()"
+              label="Login"
+              (onClick)="onLogin()"
+            ></p-button>
+          </div>
+        </p-tabpanel>
+
+        <p-tabpanel [value]="1">
+          <div class="row">
+            <p-floatlabel variant="on" class="form-field half-width">
+              <input
+                pInputText
+                id="firstName"
+                [(ngModel)]="firstName"
+                autocomplete="off"
+                required
+                #firstNameS="ngModel"
+              />
+              <label for="firstName"
+                >First Name<span class="required">*</span></label
+              >
+            </p-floatlabel>
+
+            <p-floatlabel variant="on" class="form-field half-width">
+              <input
+                pInputText
+                id="middleName"
+                [(ngModel)]="middleName"
+                autocomplete="off"
+              />
+              <label for="middleName">Middle Name</label>
+            </p-floatlabel>
+          </div>
+
+          <div class="row">
+            <p-floatlabel variant="on" class="form-field half-width">
+              <input
+                pInputText
+                id="lastName"
+                [(ngModel)]="lastName"
+                autocomplete="off"
+                required
+                #lastNameS="ngModel"
+              />
+              <label for="lastName"
+                >Last Name<span class="required">*</span></label
+              >
+            </p-floatlabel>
+
+            <p-floatlabel variant="on" class="form-field half-width">
+              <input
+                pInputText
+                id="mobile"
+                [(ngModel)]="mobile"
+                autocomplete="off"
+                required
+                pattern="^[6-9][0-9]{9}$"
+                #mobileS="ngModel"
+              />
+              <label for="mobile"
+                >Mobile Number<span class="required">*</span></label
+              >
+            </p-floatlabel>
+          </div>
+          <div class="row">
+            <p-floatlabel variant="on" class="form-field half-width">
+              <input
+                pInputText
+                id="email"
+                [(ngModel)]="email"
+                autocomplete="off"
+                required
+                email
+                #emailS="ngModel"
+              />
+              <label for="email">Email<span class="required">*</span></label>
+            </p-floatlabel>
+
+            <p-floatlabel variant="on" class="form-field half-width">
+              <input
+                pInputText
+                id="flat"
+                [(ngModel)]="flat"
+                autocomplete="off"
+                required
+                pattern="^[0-8]0[1-4]$"
+                #flatS="ngModel"
+              />
+              <label for="flat">Flat<span class="required">*</span></label>
+            </p-floatlabel>
+          </div>
+          <div class="row">
+            <p-floatlabel variant="on" class="form-field half-width">
+              <input
+                type="password"
+                pInputText
+                id="password"
+                [(ngModel)]="password"
+                autocomplete="off"
+                required
+                minlength="12"
+                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{12,}$"
+                #passwordS="ngModel"
+              />
+              <label for="password"
+                >Password<span class="required">*</span></label
+              >
+            </p-floatlabel>
+
+            <p-floatlabel variant="on" class="form-field half-width">
+              <input
+                pInputText
+                type="password"
+                id="confirmpassword"
+                [(ngModel)]="confirmPassword"
+                autocomplete="off"
+                required
+                minlength="12"
+                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{12,}$"
+                #confirmPasswordS="ngModel"
+              />
+              <label for="confirmpassword"
+                >Confirm Password<span class="required">*</span></label
+              >
+            </p-floatlabel>
+          </div>
+          <p-button
+            [disabled]="isFetching()"
+            label="Sign Up"
+            (onClick)="onRegister()"
+          ></p-button>
+          @if (firstNameS.touched && firstNameS.dirty && firstNameS.invalid) {
+          <p class="control-error">Firstname is required.</p>
+          } @if (lastNameS.touched && lastNameS.dirty && lastNameS.invalid) {
+          <p class="control-error">Lastname is required.</p>
+          } @if (flatS.touched && flatS.dirty && flatS.invalid) {
+          <p class="control-error">Invalid flat number.</p>
+          } @if (mobileS.touched && mobileS.dirty && mobileS.invalid) {
+          <p class="control-error">Invalid mobile number.</p>
+          } @if (emailS.touched && emailS.dirty && emailS.invalid) {
+          <p class="control-error">Invalid email address.</p>
+          } @if (passwordS.touched && passwordS.dirty && passwordS.invalid) {
+          <p class="control-error">
+            Invalid password (Must have one small, one capital character, one
+            special character and one digit).
+          </p>
+          } @if (confirmPasswordS.touched && confirmPasswordS.dirty &&
+          confirmPasswordS.invalid) {
+          <p class="control-error">
+            Invalid password (Must have one small, one capital character, one
+            special character and one digit).
+          </p>
+          } @if (passwordS.value !== confirmPasswordS.value &&
+          confirmPasswordS.touched) {
+          <p class="control-error">
+            Password is not matching in confirm password.
+          </p>
+          }
+          <div *ngIf="showError" class="error-box">
+            <p>{{ errorMessage }}</p>
+          </div>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </p-card>
+</div>

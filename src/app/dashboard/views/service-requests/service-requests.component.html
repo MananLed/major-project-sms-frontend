@@ -1,0 +1,273 @@
+<div class="requests">
+  <div class="total">
+    <div class="label">
+      <h3>Total Requests</h3>
+    </div>
+    <div class="total-count">
+      <p-avatar
+        label="{{ totalRequestCount }}"
+        class="mr-1"
+        size="large"
+        id="label"
+      />
+    </div>
+  </div>
+  <div class="pending">
+    <div class="label">
+      <h3>Pending Requests</h3>
+    </div>
+    <div class="pending-count">
+      <p-avatar
+        label="{{ pendingRequestCount }}"
+        class="mr-1"
+        size="large"
+        id="label"
+      />
+    </div>
+  </div>
+  <div class="approved">
+    <div class="label">
+      <h3>Approved Requests</h3>
+    </div>
+    <div class="approved-count">
+      <p-avatar
+        label="{{ approvedRequestCount }}"
+        class="mr-1"
+        size="large"
+        id="label"
+      />
+    </div>
+  </div>
+</div>
+
+<div class="filter-requests">
+  <p><b>Filter Requests</b></p>
+  <div class="bar">
+    <p-autocomplete
+      [(ngModel)]="selectedService"
+      [virtualScroll]="true"
+      [suggestions]="filteredService"
+      [virtualScrollItemSize]="34"
+      (completeMethod)="filterService($event)"
+      optionLabel="label"
+      [dropdown]="true"
+      scrollHeight="78px"
+      placeholder="Service Type"
+      forceSelection="true"
+    />
+    <p-autocomplete
+      [(ngModel)]="selectedStatus"
+      [virtualScroll]="true"
+      [suggestions]="filteredStatus"
+      [virtualScrollItemSize]="34"
+      (completeMethod)="filterStatus($event)"
+      optionLabel="label"
+      [dropdown]="true"
+      scrollHeight="78px"
+      placeholder="Status"
+      forceSelection="true"
+    />
+    <p-button
+      [disabled]="
+        (!selectedService && selectedStatus) ||
+        (!selectedStatus && selectedService)
+      "
+      pTooltip="Search Requests"
+      icon="pi pi-search"
+      (onClick)="searchRequests()"
+    />
+    @if (isResident) {
+    <p-button
+      pTooltip="Issue Request"
+      icon="pi pi-plus"
+      (onClick)="showAddRequestDialog()"
+    />
+    }
+  </div>
+</div>
+
+<br />
+<div class="table">
+  <p-table
+    *ngIf="allRequestData?.length > 0; else noRequest"
+    [value]="allRequestData"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [paginator]="allRequestData?.length > 5"
+    [rows]="5"
+    [rowsPerPageOptions]="[5, 10, 20]"
+  >
+    <ng-template #header>
+      <tr>
+        <th pSortableColumn="flat" style="width: 10%">
+          <div class="flex items-center gap-2">
+            Flat
+            <p-sortIcon field="flat" />
+          </div>
+        </th>
+        <th>Status</th>
+        <th pSortableColumn="time_slot" style="width: 30%">
+          <div class="flex items-center gap-2">
+            Time Slot
+            <p-sortIcon field="time_slot" />
+          </div>
+        </th>
+        <th>Service Type</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-data>
+      <tr>
+        <td>{{ data.flat }}</td>
+        <td>
+          @if(data.status === 'approved'){
+          <div class="app">
+            {{ data.status | uppercase }}
+          </div>
+          }@else if(data.status === 'pending'){
+          <div class="pen">
+            {{ data.status | uppercase }}
+          </div>
+          }@else{
+            <div class="comp">
+              {{data.status | uppercase }}
+            </div>
+          }
+        </td>
+        <td>{{ data.time_slot }}</td>
+        <td>{{ data.service_type | titlecase }}</td>
+        @if (isResident) {
+        <td>
+          <div class="actions">
+            @if(data.status === 'pending' || data.status === 'approved'){
+              <p-button
+                pTooltip="Reschedule Request"
+                icon="pi pi-stopwatch"
+                (onClick)="
+                  showRescheduleRequestDialog(data.service_type, data.request_id)
+                "
+                [disabled]="data.status === 'approved'"
+              ></p-button>
+              <p-button
+                pTooltip="Cancel Request"
+                icon="pi pi-trash"
+                severity="danger"
+                [disabled]="data.status === 'approved'"
+                (onClick)="deleteRequest(data.request_id)"
+              ></p-button>
+            }@else if(data.status === 'completed'){
+              <p-button
+                pTooltip="Give Feedback"
+                icon="pi pi-pencil"
+              ></p-button>
+            }
+          </div>
+        </td>
+        }@else if(data.status === 'pending') {
+        <td>
+          <p-button
+            pTooltip="Approve Request"
+            icon="pi pi-check"
+            [disabled]="data.status === 'approved'"
+            (onClick)="approveRequest(data.request_id)"
+          ></p-button>
+        </td>
+        }@else {
+          <td>
+          <p-button
+            pTooltip="Mark as Complete"
+            icon="pi pi-check-circle"
+            [disabled]="data.status === 'completed'"
+          ></p-button>
+          </td>
+        }
+      </tr>
+    </ng-template>
+  </p-table>
+  <ng-template #noRequest>
+    <p>No Requests for now</p>
+  </ng-template>
+</div>
+
+@if (isFetching()) {
+<app-loader></app-loader>
+}
+
+<p-dialog
+  header="Issue Service Request"
+  [(visible)]="displayAddRequestDialog"
+  [modal]="true"
+  [style]="{ width: '25rem', height: '25rem' }"
+  id="serviceDialog"
+>
+  <br />
+  <p-autocomplete
+    [(ngModel)]="selectedServiceType"
+    [suggestions]="filteredService"
+    (completeMethod)="filterService($event)"
+    [dropdown]="true"
+    optionLable="label"
+    placeholder="Select a Service"
+    forceSelection="true"
+  />
+  <br /><br /><br /><br />
+  <p-autocomplete
+    [(ngModel)]="selectedTimeSlot"
+    [suggestions]="filteredTimeSlots"
+    (completeMethod)="searchTimeSlots($event)"
+    dropdown="true"
+    field="label"
+    optionLabel="label"
+    placeholder="Select a Time Slot"
+    forceSelection="true"
+    (onDropdownClick)="fetchAvailableTimeSlots(selectedServiceType)"
+    (onSelect)="onTimeSlotSelect($event)"
+  />
+  <br /><br /><br /><br /><br /><br />
+  <div class="buttons">
+    <p-button
+      label="Cancel"
+      (click)="hideAddRequestDialog()"
+      class="p-button-text"
+      severity="contrast"
+    />
+    <p-button
+      label="Submit"
+      (click)="submitAddRequest()"
+      [disabled]="!selectedServiceType || !selectedTimeSlot"
+    />
+  </div>
+</p-dialog>
+
+<p-dialog
+  header="Reschedule Service Request"
+  [(visible)]="displayRescheduleRequestDialog"
+  [modal]="true"
+  [style]="{ width: '25rem', height: '16rem' }"
+>
+  <p-autocomplete
+    [(ngModel)]="selectedReTimeSlot"
+    [suggestions]="filteredTimeSlots"
+    (completeMethod)="searchTimeSlots($event)"
+    dropdown="true"
+    optionLabel="label"
+    placeholder="Select a Time Slot"
+    scrollHeight="78px"
+    forceSelection="true"
+    (onDropdownClick)="fetchAvailableTimeSlots(selectedReServiceType)"
+    (onSelect)="onTimeSlotSelect($event)"
+  />
+  <br /><br /><br /><br /><br />
+  <div class="buttons">
+    <p-button
+      label="Cancel"
+      (click)="hideRescheduleRequestDialog()"
+      class="p-button-text"
+      severity="contrast"
+    />
+    <p-button
+      label="Submit"
+      (click)="submitRescheduleRequest()"
+      [disabled]="!selectedReTimeSlot"
+    />
+  </div>
+</p-dialog>

@@ -1,0 +1,111 @@
+<div class="filter-requests">
+  <p><b>Search Notice</b></p>
+  <div class="bar">
+    <p-autocomplete
+      [(ngModel)]="selectedMonth"
+      [virtualScroll]="true"
+      [suggestions]="filteredMonths"
+      [virtualScrollItemSize]="34"
+      (completeMethod)="filterMonths($event)"
+      optionLabel="label"
+      [dropdown]="true"
+      scrollHeight="78px"
+      placeholder="Select Month"
+      [forceSelection]="true"
+    />
+    <p-autocomplete
+      [(ngModel)]="selectedYear"
+      [virtualScroll]="true"
+      [suggestions]="filteredYears"
+      [virtualScrollItemSize]="34"
+      (completeMethod)="filterYears($event)"
+      optionLabel="label"
+      [dropdown]="true"
+      scrollHeight="39px"
+      placeholder="Select Year"
+      [forceSelection]="true"
+    />
+    <p-button [disabled]="selectedMonth && !selectedYear" pTooltip="Search Notices" icon="pi pi-search" (onClick)="searchNotice()"/>
+  </div>
+  <br />
+  @if (!isResident) {
+  <p-button pTooltip="Add Notice" icon="pi pi-plus" (onClick)="showDialog()" />
+  }
+</div>
+<br /><br />
+<div class="card">
+  <p-table
+    *ngIf="societyNotices!.data!.length > 0; else noNotices"
+    [value]="societyNotices!.data"
+    [tableStyle]="{ 'min-width': '60rem' }"
+    [paginator]="societyNotices!.data!.length > 5"
+    [rows]="5"
+    [rowsPerPageOptions]="[5,10,20]"
+  >
+    <ng-template #header>
+      <tr>
+        <th pSortableColumn="date_issued" style="width: 20%">
+          <div class="flex items-center gap-2">Date Issued
+          <p-sortIcon field="date_issued"/>
+          </div>
+        </th>
+        <th style="width: 30%">
+          <div class="flex items-center gap-2">Content</div>
+        </th>
+        <th pSortableColumn="month" class="sc" style="width: 15%">
+          <div class="flex items-center gap-2">
+            Month
+            <p-sortIcon field="month" />
+          </div>
+        </th>
+        <th pSortableColumn="year" style="width: 20%">
+          <div class="flex items-center gap-2">
+            Year
+            <p-sortIcon field="year" />
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-data>
+      <tr>
+        <td>{{ data.date_issued | date:'mediumDate' }}</td>
+        <td>{{ data.content }}</td>
+        <td>{{ data.month }}</td>
+        <td>{{ data.year }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <ng-template #noNotices>
+    <p>No notices for now</p>
+  </ng-template>
+</div>
+
+<p-dialog
+  header="Issue Notice"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '25rem' }"
+>
+  <span class="p-text-secondary block mb-8">Enter the content</span>
+  <br /><br />
+  <textarea
+    placeholder="Max 500 characters..."
+    rows="5"
+    cols="50"
+    maxlength="500"
+    [(ngModel)]="content"
+  ></textarea>
+  <br /><br />
+  <div class="buttons">
+      <p-button
+        label="Cancel"
+        severity="contrast"
+        (onClick)="hideDialog()"
+      ></p-button>
+    <p-button [disabled]="!content" label="Issue" (onClick)="issueNotice()"></p-button>
+  </div>
+</p-dialog>
+
+@if (isFetching()) {
+<app-loader></app-loader>
+}

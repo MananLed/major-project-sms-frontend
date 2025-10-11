@@ -1,0 +1,68 @@
+@import "../../../shared/variables.scss";
+
+.heading{
+    border: 1px solid $background-theme;
+    border-radius: $curve;
+    width: 1200px;
+    margin-left: $left-space;
+    margin-top: 20px;
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+}
+
+.service-status, .people{
+    display: flex;
+    gap: 123px;
+    margin-left: $left-space;
+}
+
+.pending, .approved{
+    border: 1px solid $background-theme;
+    border-radius: $curve;
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+    width: 34%;
+    display: flex;
+}
+
+.residents, .officers{
+    margin-top: 70px;
+    border: 1px solid $background-theme;
+    border-radius: $curve;
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+    width: 34%;
+    display: flex;
+}
+
+h5{
+    margin-left: 12px;
+}
+h3{
+    margin-left: 12px;
+}
+
+.officer-count{
+    margin-left: 250px;
+    margin-top: 25px;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.resident-count{
+    margin-left: 240px;
+    margin-top: 25px;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.pending-count{
+    margin-top: 25px;
+    margin-left: 190px;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.approved-count{
+    margin-top: 25px;
+    margin-left: 175px;
+    font-size: larger;
+    font-weight: bold;
+}

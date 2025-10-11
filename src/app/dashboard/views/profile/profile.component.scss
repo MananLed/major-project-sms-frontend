@@ -1,0 +1,77 @@
+// $background-theme: aliceblue;
+// $danger-color: red;
+// $left-space: 260px;
+// $background-sidebar: #f8f9fa;
+// $curve: 6px;
+// $table-width: 1200px;
+
+@import "../../../shared/variables.scss";
+
+.buttons{
+    display: flex;
+    gap: 6px;
+    margin-top: 20px;
+    justify-content: right;  
+    width: 100%;
+    margin-left: 10px; 
+}
+
+.profile{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+    width: 950px;
+    height: 300px;
+    margin-left: $left-space;
+    margin-top: 40px;
+    border-radius: $curve;
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+    border: 1px solid $background-theme;
+    padding: 16px;
+
+}
+
+.detail{
+    border-radius: $curve;
+    border: 1px solid black;
+    width: 340px;
+    height: 40px;
+    padding: 8px;
+    background-color: white;
+}
+.edetail{
+    border-radius: $curve;
+    border: 1px solid black;
+    width: 540px;
+    height: 40px;
+    padding: 8px;
+    background-color: white;
+}
+
+.parent{
+    border: 1px solid white;
+    // height: 600px;
+    width: 1250px;
+}
+
+.heading{
+    margin-left: $left-space;
+    margin-top: -60px;
+}
+
+
+.buttons1{
+    display: flex;
+    gap: 8px;
+    justify-content: right;
+}
+
+#firstname, #middlename, #lastname, #mobile, #email{
+    width: 330px
+}
+
+.edit-profile{
+    background-color: white;
+    color: var(--p-button-primary-background)
+}
+

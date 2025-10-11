@@ -1,0 +1,23 @@
+<div class="nav">
+  <p-menubar>
+    <ng-template #start>
+      <p-avatar label="U" class="mr-1" size="large" id="label" />
+      <div class="title">
+        <h3><b>UpKeepz</b></h3>
+      </div>
+    </ng-template>
+    <ng-template #end>
+      <div class="flex items-center gap-2">
+        <button class="logout" (click)="logout()"><b>Logout</b></button>
+      </div>
+    </ng-template>
+  </p-menubar>
+</div>
+
+<div class="sidebar">
+  <p-menu [model]="items"></p-menu>
+</div>
+
+<div class="dashboard-content">
+  <router-outlet></router-outlet>
+</div>

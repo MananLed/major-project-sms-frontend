@@ -1,0 +1,140 @@
+// $background-theme: aliceblue;
+// $danger-color: red;
+// $left-space: 260px;
+// $background-sidebar: #f8f9fa;
+// $curve: 6px;
+// $table-width: 1200px;
+
+@import "../shared/variables.scss";
+
+body,
+html {
+  height: 100%;
+  margin: 0;
+}
+
+:host{
+  display: block;
+  height: 100vh;
+  width: 100%;
+  background-image: url('https://www.nexuspropertymanagement.com/sites/default/files/94928555_m_normal_none.jpg');
+  background-size: contain;
+  background-position: left;
+  background-repeat: no-repeat;
+  position: fixed;
+  background-color: whitesmoke;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding-top: 2rem;
+}
+
+.card-container {
+  position: sticky;
+  top: 160px;
+  width: 25rem;
+  overflow: hidden;
+  text-align: center;
+  margin-top: 2rem;
+  margin-left: 50%;
+}
+
+.heading {
+  position: sticky;
+  top: 0;
+  text-align: center;
+  margin-top: 2rem;
+  margin-left: 50%;
+}
+
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-field {
+  width: 100%;
+  margin-bottom: 1rem;
+  position: relative;
+
+  input {
+    width: 100%;
+    padding: 0.75rem;
+    box-sizing: border-box;
+  }
+
+  label {
+    left: 0.75rem !important;
+  }
+}
+
+.half-width {
+  flex: 1;
+}
+
+.required {
+  color: $danger-color;
+  margin-left: 0.25rem;
+}
+
+.row {
+  margin-bottom: 2px;
+}
+
+
+.error-box {
+  color: $danger-color;
+  font-weight: bold;
+}
+
+.control:has(.ng-invalid.ng-touched.ng-dirty) label {
+  color: #fa8e79;
+}
+
+input.ng-invalid.ng-touched.ng-dirty {
+  background-color: #fbdcd6;
+  border-color: $danger-color;
+}
+
+.control-error{
+  color: $danger-color;
+      margin-block-start: 0px;
+    margin-block-end: 1px;
+    align-self: flex-start;
+}
+
+.adjust{
+  width: 291px;
+  margin-top: 20px;
+}
+
+.adjust1{
+  width: 291px;
+  margin-top: 20px;
+}
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+

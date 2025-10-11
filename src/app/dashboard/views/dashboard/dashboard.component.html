@@ -1,0 +1,69 @@
+<div class="heading">
+  <h3>{{constants.welcomeMessage}}</h3>
+  <h5>{{constants.welcomeSub}}</h5>
+</div>
+<br /><br />
+<div class="service-status">
+  <div class="pending">
+    <div class="label">
+      <h3>{{constants.pendingMessage}}</h3>
+      <h5>{{constants.awaitingMessage}}</h5>
+    </div>
+    <div class="pending-count">
+      <p-avatar
+        label="{{ pendingRequestCount }}"
+        class="mr-1"
+        size="large"
+        id="label"
+      />
+    </div>
+  </div>
+  <div class="approved">
+    <div class="label">
+      <h3>{{constants.approvedMessage}}</h3>
+      <h5>{{constants.readyMessage}}</h5>
+    </div>
+    <div class="approved-count">
+      <p-avatar
+        label="{{ approvedRequestCount }}"
+        class="mr-1"
+        size="large"
+        id="label"
+      />
+    </div>
+  </div>
+</div>
+
+@if (!isResident) {
+<div class="people">
+  <div class="residents">
+    <div class="label">
+      <h3>Residents</h3>
+      <h5>Active Residents</h5>
+    </div>
+    <div class="resident-count">
+      <p-avatar
+        label="{{ residentCount?.data }}"
+        class="mr-1"
+        size="large"
+        id="label"
+      />
+    </div>
+  </div>
+  <div class="officers">
+    <div class="label">
+      <h3>Officers</h3>
+      <h5>Active Officers</h5>
+    </div>
+    <div class="officer-count">
+      <p-avatar
+        label="{{ officerCount?.data }}"
+        class="mr-1"
+        size="large"
+        id="label"
+      />
+    </div>
+  </div>
+</div>
+
+}

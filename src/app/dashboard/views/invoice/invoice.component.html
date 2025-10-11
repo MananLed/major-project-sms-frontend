@@ -1,0 +1,108 @@
+<div class="filter-requests">
+  <p><b>Search Invoice</b></p>
+  <div class="bar">
+    <p-autocomplete
+      [(ngModel)]="selectedMonth"
+      [virtualScroll]="true"
+      [suggestions]="filteredMonths"
+      [virtualScrollItemSize]="34"
+      (completeMethod)="filterMonths($event)"
+      optionLabel="label"
+      [dropdown]="true"
+      scrollHeight="78px"
+      placeholder="Select Month"
+      [forceSelection]="true"
+    />
+    <p-autocomplete
+      [(ngModel)]="selectedYear"
+      [virtualScroll]="true"
+      [suggestions]="filteredYears"
+      [virtualScrollItemSize]="34"
+      (completeMethod)="filterYears($event)"
+      optionLabel="label"
+      [dropdown]="true"
+      scrollHeight="39px"
+      placeholder="Select Year"
+      [forceSelection]="true"
+    />
+    <p-button [disabled]="selectedMonth && !selectedYear" pTooltip="Search Invoices" icon="pi pi-search" (onClick)="searchInvoice()" />
+  </div>
+  <br />
+  @if (!isResident) {
+    <p-button icon="pi pi-plus" pTooltip="Add Invoice" (onClick)="showDialog()" />
+  }
+</div>
+
+<br /><br />
+
+<div class="card">
+  <p-table
+    *ngIf="invoiceData!.data!.length > 0; else noInvoice"
+    [value]="invoiceData!.data"
+    [tableStyle]="{ 'min-width': '60rem' }"
+    [paginator]="invoiceData!.data!.length > 5"
+    [rows]="5"
+    [rowsPerPageOptions]="[5,10,20]"
+  >
+    <ng-template #header>
+      <tr>
+        <th pSortableColumn="month" style="width: 25%">
+          <div class="flex items-center gap-2">
+            Month
+            <p-sortIcon field="month" />
+          </div>
+        </th>
+        <th pSortableColumn="year" style="width: 25%">
+          <div class="flex items-center gap-2">
+            Year
+            <p-sortIcon field="year" />
+          </div>
+        </th>
+        <th pSortableColumn="amount" style="width: 25%">
+          <div class="flex items-center gap-2">
+            Amount
+            <p-sortIcon field="amount" />
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-data>
+      <tr>
+        <td>{{ data.month }}</td>
+        <td>{{ data.year }}</td>
+        <td>Rs {{ data.amount }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <ng-template #noInvoice>
+    <p>No Invoices for now</p>
+  </ng-template>
+</div>
+
+<p-dialog
+  header="Issue Invoice"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '25rem' }"
+  (onHide)="resetDialog()"
+>
+  <span class="p-text-secondary block mb-8">Enter the Amount</span>
+  <br /><br />
+  <p-floatlabel variant="on">
+    <input pInputText id="amount" [(ngModel)]="amount" autocomplete="off" type="number" min="0" oninput="validity.valid||(value='');"/>
+    <label for="amount">Amount</label>
+  </p-floatlabel>
+  <br /><br />
+  <div class="buttons">
+      <p-button
+        label="Cancel"
+        severity="contrast"
+        (onClick)="hideDialog()"
+      ></p-button>
+    <p-button [disabled]="!amount" label="Issue" (onClick)="issueInvoice()"></p-button>
+  </div>
+</p-dialog>
+
+@if (isFetching()) {
+<app-loader></app-loader>
+}
