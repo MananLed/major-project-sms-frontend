@@ -58,13 +58,6 @@
                 >
               </p-floatlabel>
             </div>
-
-            @if (passwordL.touched && passwordL.dirty && passwordL.invalid) {
-            <p class="control-error">
-              Invalid password (Must have one small, one capital character, one
-              special character and one digit).
-            </p>
-            }
             <br />
             <p-button
               [disabled]="isFetching()"
@@ -233,3 +226,5 @@
     </p-tabs>
   </p-card>
 </div>
+
+<p-toast/>

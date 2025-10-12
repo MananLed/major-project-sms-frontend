@@ -1,21 +1,26 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Component, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, signal, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { AutoComplete } from 'primeng/autocomplete';
+import { AutoComplete, AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { Tooltip } from 'primeng/tooltip';
 import { Avatar } from 'primeng/avatar';
 import { SelectItem } from 'primeng/select';
+import { FloatLabel } from "primeng/floatlabel";
+import { RatingModule } from 'primeng/rating';
 
 import { AuthService } from '../../../service/auth.service';
 import { ApisService } from '../../../service/apis.service';
 import { LoaderComponent } from '../loader/loader.component';
 import { Constants } from '../../../shared/constants';
+import { Toast } from 'primeng/toast';
+import { Ripple } from 'primeng/ripple';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-service-requests',
@@ -29,28 +34,33 @@ import { Constants } from '../../../shared/constants';
     Avatar,
     DialogModule,
     LoaderComponent,
-  ],
+    FloatLabel,
+    RatingModule,
+    Toast,
+    Ripple
+],
   templateUrl: './service-requests.component.html',
   styleUrl: './service-requests.component.scss',
+  providers: [MessageService]
 })
 export class ServiceRequestsComponent {
-  selectedService: any = null;
-  selectedStatus: any = null;
-  filteredService!: any[];
-  filteredStatus!: any[];
+  selectedService: string = '';
+  selectedStatus: string = '';
+  filteredService: Array<{ label: string; value: string }> = [];
+  filteredStatus: Array<{ label: string; value: string }> = [];
   userRole: string | null = null;
   isAdmin: boolean = false;
   isOfficer: boolean = false;
   isResident: boolean = false;
-  totalRequestCount: any;
-  pendingRequestCount: any;
-  approvedRequestCount: any;
-  allRequestData: any;
-  pendingRequestData: any;
-  approvedRequestData: any;
+  totalRequestCount: number = 0;
+  pendingRequestCount: number = 0;
+  approvedRequestCount: number = 0;
   isFetching = signal(false);
   displayAddRequestDialog: boolean = false;
   displayRescheduleRequestDialog: boolean = false;
+  allRequestData: any;
+  pendingRequestData: any;
+  approvedRequestData: any;
   selectedServiceType: any | null = null;
   selectedTimeSlot: any | null = null;
   selectedTimeSlotIndex: any | null = null;
@@ -61,21 +71,31 @@ export class ServiceRequestsComponent {
   selectedReServiceType: any | null;
   selectedReServiceID: any | null;
   completedRequestData: any;
-  completedRequestCount: any;
+  completedRequestCount: number = 0;
+
+  displayApproveRequestDialog: boolean = false;
+  displayIssueFeedbackDialog: boolean = false;
+  @ViewChild('approveForm') approveForm?: NgForm;
+  @ViewChild('feedbackForm') feedbackForm?: NgForm;
+  assignedTo: string = '';
+  requestID: any;
+  rating: number = 0;
+  content: string = '';
 
   private readonly constants = Constants;
 
   constructor(
     private auth: AuthService,
     private route: ActivatedRoute,
-    private api: ApisService
+    private api: ApisService,
+    private messageService: MessageService
   ) {}
 
-  private allServices = [
+  private allServices: Array<{ label: string; value: string }> = [
     { label: 'Electrician', value: 'Electrician' },
     { label: 'Plumber', value: 'Plumber' },
   ];
-  private allStatuses = [
+  private allStatuses: Array<{ label: string; value: string }> = [
     { label: 'Pending', value: 'Pending' },
     { label: 'Approved', value: 'Approved' },
     { label: 'Completed', value: 'Completed'},
@@ -123,18 +143,26 @@ export class ServiceRequestsComponent {
     this.isResident = this.auth.isResident();
   }
 
-  filterStatus(event: any): void {
+  filterStatus(event: AutoCompleteCompleteEvent): void {
     const query = event.query.toLowerCase();
     this.filteredStatus = this.allStatuses.filter((status) =>
       status.label.toLowerCase().includes(query)
     );
   }
 
-  filterService(event: any): void {
+  filterService(event: AutoCompleteCompleteEvent): void {
     const query = event.query.toLowerCase();
     this.filteredService = this.allServices.filter((service) =>
       service.label.toLowerCase().includes(query)
     );
+  }
+
+  showSuccess(message: string) {
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
+  }
+
+  showError(message: string) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
   }
 
   onTimeSlotSelect(event: any): void {
@@ -194,10 +222,12 @@ export class ServiceRequestsComponent {
           this.displayRescheduleRequestDialog = false;
           this.selectedReServiceID = null;
           this.selectedTimeSlotIndex = null;
+          this.showSuccess('Request rescheduled successfully.')
           this.isFetching.set(false);
         },
         error: (err) => {
           this.isFetching.set(false);
+          this.showError('Error in rescheduling request.')
           console.error(this.constants.errorReschedulingRequests, err);
         },
       });
@@ -216,8 +246,9 @@ export class ServiceRequestsComponent {
           requestData.data.Approved === null
             ? 0
             : requestData.data.Approved.length;
+        this.completedRequestCount = requestData.data.Completed === null ? 0 : requestData.data.Completed.length;
         this.totalRequestCount =
-          this.pendingRequestCount + this.approvedRequestCount;
+          this.pendingRequestCount + this.approvedRequestCount + this.completedRequestCount;
 
         console.log(this.pendingRequestCount);
         console.log(this.approvedRequestCount);
@@ -225,9 +256,11 @@ export class ServiceRequestsComponent {
 
         this.pendingRequestData = requestData.data.Pending || [];
         this.approvedRequestData = requestData.data.Approved || [];
+        this.completedRequestData = requestData.data.Completed || [];
         this.allRequestData = this.pendingRequestData.concat(
           this.approvedRequestData
         );
+        this.allRequestData = this.allRequestData.concat(this.completedRequestData);
 
         console.log(this.pendingRequestData);
         console.log(this.approvedRequestData);
@@ -239,18 +272,74 @@ export class ServiceRequestsComponent {
     });
   }
 
-  approveRequest(requestID: any) {
+  approveRequest(form: NgForm): void {
+    if (form.valid){
     this.isFetching.set(true);
-    this.api.approveRequest(requestID).subscribe({
+    this.api.approveRequest(this.requestID, {assignedto: this.assignedTo}).subscribe({
       next: (res) => {
         this.fetchAllRequests();
+        this.hideApproveRequestDialog();
+        this.showSuccess('Request approved successfully.')
         this.isFetching.set(false);
       },
       error: (err) => {
         this.isFetching.set(false);
+        this.hideApproveRequestDialog();
+        this.showError('Error in approving request.')
         console.error(this.constants.errorFetchingAllRequests, err);
       },
     });
+  }
+  }
+
+  showIssueFeedbackDialog(requestID: any){
+    this.requestID = requestID;
+    this.displayIssueFeedbackDialog = true;
+  }
+
+  hideIssueFeedbackDialog(){
+    this.feedbackForm?.reset();
+    this.rating = 0;
+    this.content = '';
+    this.displayIssueFeedbackDialog = false;
+  }
+
+  issueFeedback(form: NgForm): void{
+    console.log(this.rating);
+    console.log(this.content);
+    console.log(this.requestID);
+    this.isFetching.set(true);
+    this.api.postFeedbackOnRequest({rating: this.rating, content: this.content, requestid: String(this.requestID)}).subscribe({
+      next: (res) => {
+        this.hideIssueFeedbackDialog();
+        this.fetchRequestsOfResident();
+        this.showSuccess('Feedback issued successfully.')
+        this.isFetching.set(false);
+      },
+      error: (err) => {
+        this.isFetching.set(false);
+        this.hideIssueFeedbackDialog();
+        this.showError('Error in giving feedback.')
+        console.error(this.constants.errorAddingFeedbacks, err);
+      }
+    })
+  }
+
+
+  markRequestComplete(requestID: any){
+    this.isFetching.set(true);
+    this.api.completeRequest(requestID).subscribe({
+      next: (res) => {
+        this.fetchAllRequests();
+        this.showSuccess('Request marked completed successfully')
+        this.isFetching.set(false);
+      },
+      error: (err) => {
+        this.isFetching.set(false);
+        this.showError('Error in marking request complete')
+        console.error(this.constants.errorCompletingRequest, err);
+      }
+    })
   }
 
   deleteRequest(requestID: any) {
@@ -258,10 +347,12 @@ export class ServiceRequestsComponent {
     this.api.deleteRequest(requestID).subscribe({
       next: (res) => {
         this.fetchRequestsOfResident();
+        this.showSuccess('Request deleted successfully.')
         this.isFetching.set(false);
       },
       error: (err) => {
         this.isFetching.set(false);
+        this.showError('Error in deleting service request.')
         console.error(this.constants.errorDeleteRequest, err);
       },
     });
@@ -287,8 +378,9 @@ export class ServiceRequestsComponent {
           requestData.data.Approved === null
             ? 0
             : requestData.data.Approved.length;
+        this.completedRequestCount = requestData.data.Completed === null ? 0 : requestData.data.Completed.length;
         this.totalRequestCount =
-          this.pendingRequestCount + this.approvedRequestCount;
+          this.pendingRequestCount + this.approvedRequestCount + this.completedRequestCount;
 
         console.log(this.pendingRequestCount);
         console.log(this.approvedRequestCount);
@@ -296,8 +388,13 @@ export class ServiceRequestsComponent {
 
         this.pendingRequestData = requestData.data.Pending || [];
         this.approvedRequestData = requestData.data.Approved || [];
+        this.completedRequestData = requestData.data.Completed || [];
         this.allRequestData = this.pendingRequestData.concat(
           this.approvedRequestData
+        );
+
+        this.allRequestData = this.allRequestData.concat(
+          this.completedRequestData
         );
 
         console.log(this.pendingRequestData);
@@ -325,6 +422,7 @@ export class ServiceRequestsComponent {
         next: (res) => {
           console.log(res);
           this.fetchRequestsOfResident();
+          this.showSuccess('Request submitted successfully.')
           this.displayAddRequestDialog = false;
           this.isFetching.set(false);
           this.selectedServiceType = null;
@@ -333,6 +431,7 @@ export class ServiceRequestsComponent {
         },
         error: (err) => {
           this.isFetching.set(false);
+          this.showError('Error in submitting request.')
           console.error(this.constants.errorAddingRequest, err);
         },
       });
@@ -362,6 +461,17 @@ export class ServiceRequestsComponent {
     });
   }
 
+  showApproveRequestDialog(requestID: any){
+    this.displayApproveRequestDialog = true;
+    this.requestID = requestID;
+  }
+
+  hideApproveRequestDialog(){
+    this.approveForm?.reset();
+    this.assignedTo = '';
+    this.displayApproveRequestDialog = false;
+  }
+
   searchRequests(): void {
     if (!this.selectedStatus && !this.selectedService) {
       this.isFetching.set(true);
@@ -385,14 +495,14 @@ export class ServiceRequestsComponent {
             } else {
               this.allRequestData = [];
             }
-            this.selectedService = null;
-            this.selectedStatus = null;
+            this.selectedService = '';
+            this.selectedStatus = '';
             this.isFetching.set(false);
           },
           error: (err) => {
             console.log(this.constants.errorSearchingRequests, err);
-            this.selectedService = null;
-            this.selectedStatus = null;
+            this.selectedService = '';
+            this.selectedStatus = '';
             this.isFetching.set(false);
           },
         });

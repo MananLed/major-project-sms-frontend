@@ -35,6 +35,10 @@ export class ApisService {
     return this.http.get(`${this.baseUrl}/feedbacks`);
   }
 
+  postFeedbackOnRequest(feedbackOnRequest: {rating: number, content: string, requestid: string}): Observable<any>{
+    return this.http.post(`${this.baseUrl}/feedbacks/request`, feedbackOnRequest);
+  }
+
   getNotices(): Observable<any>{
     return this.http.get(`${this.baseUrl}/notices`);
   }
@@ -72,6 +76,10 @@ export class ApisService {
     return this.http.post(`${this.baseUrl}/feedbacks`, feedback);
   }
 
+  checkFeedback(requestID: {requestid: string}): Observable<any>{
+    return this.http.patch(`${this.baseUrl}/feedbacks/given`, requestID);
+  }
+
   getResidentCount(): Observable<any>{
     return this.http.get(`${this.baseUrl}/society/residents/count`);
   }
@@ -106,12 +114,16 @@ export class ApisService {
     return this.http.delete(`${this.baseUrl}/service/cancel/${id}`);
   }
 
-  approveRequest(id: any): Observable<any>{
-    return this.http.patch(`${this.baseUrl}/service/approve/${id}`, {});
+  approveRequest(id: any, assignedTo: {assignedto: string}): Observable<any>{
+    return this.http.patch(`${this.baseUrl}/service/approve/${id}`, assignedTo);
   }
 
   rescheduleRequest(id: any, slot: {slot: number}): Observable<any>{
     return this.http.patch(`${this.baseUrl}/service/reschedule/${id}`, slot);
+  }
+
+  completeRequest(id: any): Observable<any>{
+    return this.http.patch(`${this.baseUrl}/service/complete/${id}`, {});
   }
 
   putRequest(service: ServiceRequest): Observable<any>{

@@ -1,91 +1,67 @@
-@if (isResident) {
-<div class="issueFeedback">
-  <div class="issue">
-    <h3>Give Feedback</h3>
-    <div class="rating">
-        <p-autocomplete
-          [(ngModel)]="rating"
-          [dropdown]="true"
-          [suggestions]="filteredRatings"
-          (completeMethod)="filterRating($event)"
-          [forceSelection]="true"
-          placeholder="Rating"
-        />
-    </div>
-    <textarea
-      type="text"
-      id="feedback"
-      rows="5"
-      cols="100"
-      maxlength="500"
-      placeholder="Max 500 characters..."
-      [(ngModel)]="content"
-    ></textarea>
-  </div>
-  <div class="b1">
-    <p-button
-      [disabled]="!rating"
-      pTooltip="Add Feedback"
-      icon="pi pi-plus"
-      (onClick)="addFeedback()"
-    />
-  </div>
-</div>
-}
+<div class="feedback-container">
+  <h2 class="feedback-title">Feedbacks</h2>
 
-<div class="card">
-  @if (isResident) {
-    <p>Your recent Feedbacks</p>
-  }@else {
-    <p>Resident's Feedbacks</p>
+  @if (isFetching()) {
+    <app-loader></app-loader>
+  } @else {
+
+    @if (userFeedback?.data?.length === 0) {
+      <p class="no-feedback">No feedbacks available</p>
+    } @else {
+
+      <div class="feedback-list">
+        <div
+          class="feedback-card"
+          *ngFor="let feedback of userFeedback!.data"
+        >
+          <div class="feedback-header">
+            <div class="feedback-avatar">
+              <p-avatar
+                label="{{ feedback.name ? feedback.name[0] : '?' }}"
+                shape="circle"
+              ></p-avatar>
+            </div>
+            <div class="feedback-meta">
+              <h3 class="resident-name">{{ feedback.name }}</h3>
+              <p class="flat-number">Flat No: {{ feedback.flat }}</p>
+            </div>
+            <div class="rating-container">
+              <p-rating
+                [readonly]="true"
+                [ngModel]="feedback.rating"
+                [stars]="5"
+              ></p-rating>
+              <span class="rating-value">{{ feedback.rating }}/5</span>
+            </div>
+          </div>
+
+          <div class="feedback-body">
+            <p class="feedback-content">
+              "{{ feedback.content }}"
+            </p>
+          </div>
+
+          <div class="feedback-footer">
+            <div class="footer-left">
+              <p class="assigned-to">
+                Assigned To:
+                <strong>{{ feedback.assignedto }}</strong>
+              </p>
+              <p class="service-type">
+                Service Type: <strong>{{ feedback.servicetype | titlecase }}</strong>
+              </p>
+            </div>
+
+            @if (!isResident) {
+              <div class="footer-right">
+                <p class="date">Date: {{ feedback.date }}</p>
+                <p class="time-slot">Time Slot: {{ feedback.timeslot }}</p>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
   }
-  <p-table
-    *ngIf="userFeedback!.data!.length > 0; else noFeedback"
-    [value]="userFeedback!.data"
-    [tableStyle]="{ 'min-width': '60rem' }"
-    [paginator]="userFeedback!.data!.length > 5"
-    [rows]="5"
-    [rowsPerPageOptions]="[5,10,20]"
-  >
-    <ng-template #header>
-      <tr>
-        <th pSortableColumn="name" style="width: 20%">
-          <div class="flex items-center gap-2">
-            Resident Name
-            <p-sortIcon field="name" />
-          </div>
-        </th>
-        <th pSortableColumn="flat" style="width: 25%">
-          <div class="flex items-center gap-2">
-            Flat
-            <p-sortIcon field="flat"/>
-          </div>
-        </th>
-        <th pSortableColumn="rating" style="width: 15%">
-          <div class="flex items-center gap-2">
-            Rating (Out of 5)
-            <p-sortIcon field="rating" />
-          </div>
-        </th>
-        <th style="width: 40%">
-          <div class="flex items-center gap-2">Content</div>
-        </th>
-      </tr>
-    </ng-template>
-    <ng-template #body let-data>
-      <tr>
-        <td>{{ data.name }}</td>
-        <td>{{ data.flat }}</td>
-        <td>{{ data.rating }}</td>
-        <td>{{ data.content }}</td>
-      </tr>
-    </ng-template>
-  </p-table>
-  <ng-template #noFeedback>
-    <p>No feedbacks for now</p>
-  </ng-template>
 </div>
-
-@if (isFetching()) {
-<app-loader></app-loader>
-}
+<p-toast/>

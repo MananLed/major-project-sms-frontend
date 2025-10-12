@@ -1,5 +1,5 @@
-import { definePreset } from '@primeuix/themes';
-import Aura from '@primeuix/themes/aura';
+import { definePreset } from "@primeng/themes";
+import Aura from '@primeng/themes/aura';
 
 export const customPreset = definePreset(Aura, {
   semantic: {
@@ -20,7 +20,6 @@ export const customPreset = definePreset(Aura, {
       light: {
         primary: {
           color: '{sky.800}',
-          inverseColor: '#ffffff',
           hoverColor: '{sky.900}',
           activeColor: '{sky.800}',
         },

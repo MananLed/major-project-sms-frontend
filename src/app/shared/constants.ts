@@ -33,5 +33,6 @@ export const Constants = {
     errorDeleteRequest: 'Error in deleting service request: ',
     errorFetchingAllRequests: 'Error fetching all requests: ',
     errorReschedulingRequests: 'Error rescheduling request: ',
-    
+    errorCompletingRequest: 'Error in marking request as complete',
+    errorCheckingFeedbackGiven: 'Error in checking if feedback is given or not '
 }

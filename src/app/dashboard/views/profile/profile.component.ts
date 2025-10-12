@@ -15,6 +15,9 @@ import { ApisService } from '../../../service/apis.service';
 import { AuthService } from '../../../service/auth.service';
 import { ProfileResponse, ProfileSuccessResponse } from '../../../interface/profile.model';
 import { Constants } from '../../../shared/constants';
+import { Toast } from 'primeng/toast';
+import { Ripple } from 'primeng/ripple';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-profile',
@@ -28,10 +31,13 @@ import { Constants } from '../../../shared/constants';
     Tooltip,
     MessageModule,
     Message,
-    MessagesModule
+    MessagesModule,
+    Toast,
+    Ripple
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
+  providers: [MessageService]
 })
 export class ProfileComponent implements OnInit {
   
@@ -60,7 +66,8 @@ export class ProfileComponent implements OnInit {
     private route: ActivatedRoute,
     private api: ApisService,
     private routes: Router,
-    private auth: AuthService
+    private auth: AuthService,
+    private messageService: MessageService,
   ) {}
 
   ngOnInit(): void {
@@ -69,6 +76,14 @@ export class ProfileComponent implements OnInit {
     if (userData && userData.status === 'Success') {
       this.userDetails = userData as ProfileSuccessResponse;
     }
+  }
+
+  showSuccess(message: string) {
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
+  }
+
+  showError(message: string) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
   }
 
   showDialog(): void {
@@ -125,11 +140,11 @@ export class ProfileComponent implements OnInit {
 
     this.api
       .updateProfile({
-        firstname: String(this.firstname),
-        middlename: String(this.middlename),
-        lastname: String(this.lastname),
-        email: String(this.email),
-        mobilenumber: String(this.mobile),
+        firstname: this.firstname,
+        middlename: this.middlename,
+        lastname: this.lastname,
+        email: this.email,
+        mobilenumber: this.mobile,
       })
       .subscribe({
         next: (res) => {
@@ -140,10 +155,12 @@ export class ProfileComponent implements OnInit {
           this.lastname = '';
           this.mobile = '';
           this.email = '';
+          this.showSuccess('Profile updated successfully.')
           this.isFetching.set(false);
         },
         error: (err) => {
           this.isFetching.set(false);
+          this.showError(this.constants.errorProfileUpdate);
           console.error(this.constants.errorProfileUpdate, err);
         },
       });
@@ -163,8 +180,8 @@ export class ProfileComponent implements OnInit {
 
     this.api
       .updatePassword({
-        oldPassword: String(this.oldpassword),
-        newPassword: String(this.newpassword),
+        oldPassword: this.oldpassword,
+        newPassword: this.newpassword,
       })
       .subscribe({
         next: (res) => {
@@ -172,11 +189,13 @@ export class ProfileComponent implements OnInit {
           this.oldpassword = '';
           this.newpassword = '';
           this.isFetching.set(false);
+          this.showSuccess('Password changed successfully.')
           this.auth.logoutUser();
           this.routes.navigate(['/login']);
         },
         error: (err) => {
           this.isFetching.set(false);
+          this.showError(this.constants.errorPasswordUpdate);
           console.error(this.constants.errorPasswordUpdate, err);
         },
       });
@@ -192,6 +211,7 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         this.isFetching.set(false);
+        this.showError(this.constants.errorDeletingProfile);
         console.error(this.constants.errorDeletingProfile, err);
       },
     });

@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -14,6 +14,12 @@ import { LoaderComponent } from '../loader/loader.component';
 import { ApisService } from '../../../service/apis.service';
 import { FeedbackSuccessResponse } from '../../../interface/feedback.model';
 import { Constants } from '../../../shared/constants';
+import { Avatar } from "primeng/avatar";
+import { RatingModule } from 'primeng/rating';
+import { TagModule } from 'primeng/tag';
+import { Toast } from 'primeng/toast';
+import { Ripple } from 'primeng/ripple';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-feedback',
@@ -26,12 +32,20 @@ import { Constants } from '../../../shared/constants';
     AutoCompleteModule,
     FormsModule,
     LoaderComponent,
-  ],
+    Avatar,
+    RatingModule,
+    TagModule,
+    CommonModule,
+    Toast,
+    Ripple,
+
+],
   templateUrl: './feedback.component.html',
   styleUrl: './feedback.component.scss',
+  providers: [MessageService]
 })
 export class FeedbackComponent implements OnInit {
-  userFeedback?: FeedbackSuccessResponse;
+  userFeedback!: FeedbackSuccessResponse;
   userRole: string | null = null;
   isAdmin: boolean = false;
   isOfficer: boolean = false;
@@ -39,19 +53,18 @@ export class FeedbackComponent implements OnInit {
   isFetching = signal(false);
   content!: string;
   rating!: number;
-  filteredRatings!: any[];
 
   readonly constants = Constants;
 
-  constructor(private route: ActivatedRoute, private auth: AuthService, private api:ApisService) {}
+  constructor(private route: ActivatedRoute, private auth: AuthService, private api:ApisService, private messageService: MessageService) {}
 
-  private allRatings = [
-    { label: 1, value: 1 },
-    { label: 2, value: 2 },
-    { label: 3, value: 3 },
-    { label: 4, value: 4 },
-    { label: 5, value: 5 },
-  ];
+  showSuccess(message: string) {
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
+  }
+
+  showError(message: string) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+  }
 
   ngOnInit(): void {
     this.userFeedback = this.route.snapshot.data['userFeedback'];
@@ -60,14 +73,6 @@ export class FeedbackComponent implements OnInit {
     this.isAdmin = this.auth.isAdmin();
     this.isOfficer = this.auth.isOfficer();
     this.isResident = this.auth.isResident();
-    this.filteredRatings = this.allRatings;
-  }
-
-  filterRating(event: any): void {
-    const query = event.query;
-    this.filteredRatings = this.allRatings.filter((rating) =>
-      rating.label.toString().includes(query)
-    );
   }
 
   fetchFeedbacks(): void{
@@ -76,26 +81,8 @@ export class FeedbackComponent implements OnInit {
         this.userFeedback = res;
       },
       error: (err) => {
+        this.showError(this.constants.errorFetchingFeedbacks);
         console.error(this.constants.errorFetchingFeedbacks, err);
-      },
-    });
-  }
-
-  addFeedback(): void{
-    this.isFetching.set(true);
-
-    if(this.rating < 1 || this.rating > 5) return;
-
-    this.api.putFeedback({rating: this.rating, content: this.content}).subscribe({
-      next: (res) => {
-        this.fetchFeedbacks();
-        this.content = '';
-        this.rating = 5;
-        this.isFetching.set(false);
-      },
-      error: (err) => {
-        this.isFetching.set(false);
-        console.error(this.constants.errorAddingFeedbacks, err);
       },
     });
   }

@@ -3,7 +3,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { AutoComplete } from 'primeng/autocomplete';
+import { AutoComplete, AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
@@ -14,6 +14,9 @@ import { LoaderComponent } from '../loader/loader.component';
 import { AuthService } from '../../../service/auth.service';
 import { NoticeSuccessResponse } from '../../../interface/notice.model';
 import { Constants } from '../../../shared/constants';
+import { Toast } from 'primeng/toast';
+import { Ripple } from 'primeng/ripple';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-notice',
@@ -28,9 +31,12 @@ import { Constants } from '../../../shared/constants';
     LoaderComponent,
     Tooltip,
     CommonModule,
+    Toast,
+    Ripple
   ],
   templateUrl: './notice.component.html',
   styleUrl: './notice.component.scss',
+  providers: [MessageService]
 })
 export class NoticeComponent implements OnInit {
   societyNotices!: NoticeSuccessResponse;
@@ -44,41 +50,40 @@ export class NoticeComponent implements OnInit {
 
   readonly constants = Constants;
 
-  selectedItem: any;
+  selectedYear: string = '';
+  selectedMonth: string = '';
 
-  selectedYear: any = null;
-  selectedMonth: any = null;
+  filteredYears: Array<{ label: string; value: string }> = [];
+  filteredMonths: Array<{ label: string; value: string }> = [];
 
-  filteredYears!: any[];
-  filteredMonths!: any[];
-
-  years: any = [];
-  months: any = [];
+  years: string[] = [];
+  months: string[] = [];
 
 
   constructor(
     private route: ActivatedRoute,
     private api: ApisService,
-    private auth: AuthService
+    private auth: AuthService,
+    private messageService: MessageService
   ) {}
 
-  filterYears(event: any) {
+  filterYears(event: AutoCompleteCompleteEvent) {
     const query = event.query;
-    this.filteredYears = this.years.filter((year: any) =>
+    this.years = this.years.filter((year: string) =>
       this.years.toString().toLowerCase().includes(query.toLowerCase())
     );
-    this.filteredYears = this.years.map((year: any) => ({
+    this.filteredYears = this.years.map((year: string) => ({
       label: year,
       value: year,
     }));
   }
 
-  filterMonths(event: any) {
+  filterMonths(event: AutoCompleteCompleteEvent) {
     const query = event.query;
-    this.filteredMonths = this.months.filter((month: any) =>
+    this.months = this.months.filter((month: string) =>
       month.toString().toLowerCase().includes(query.toLowerCase())
     );
-    this.filteredMonths = this.months.map((month: any) => ({
+    this.filteredMonths = this.months.map((month: string) => ({
       label: month,
       value: month,
     }));
@@ -92,8 +97,8 @@ export class NoticeComponent implements OnInit {
     this.isOfficer = this.auth.isOfficer();
     this.isResident = this.auth.isResident();
 
-    const yearsSet = new Set<any>();
-    const monthsSet = new Set<any>();
+    const yearsSet = new Set<string>();
+    const monthsSet = new Set<string>();
 
     this.societyNotices.data.forEach((item: any) => {
       yearsSet.add(item.year);
@@ -103,17 +108,22 @@ export class NoticeComponent implements OnInit {
     this.years = [...yearsSet];
     this.months = [...monthsSet];
 
-    this.filteredYears = [...this.years];
-    this.filteredMonths = [...this.months];
-
-    this.filteredYears = this.years.map((year: any) => ({
+    this.filteredYears = this.years.map((year: string) => ({
       label: year,
       value: year,
     }));
-    this.filteredMonths = this.months.map((month: any) => ({
+    this.filteredMonths = this.months.map((month: string) => ({
       label: month,
       value: month,
     }));
+  }
+
+  showSuccess(message: string) {
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
+  }
+
+  showError(message: string) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
   }
 
   showDialog() {
@@ -148,14 +158,14 @@ export class NoticeComponent implements OnInit {
       this.api.searchNotice(null, this.selectedYear).subscribe({
         next: (res) => {
           this.societyNotices = res;
-          this.selectedMonth = null;
-          this.selectedYear = null;
+          this.selectedMonth = '';
+          this.selectedYear = '';
           this.isFetching.set(false);
         },
         error: (err) => {
           console.error(this.constants.errorSearchingNotices, err);
-          this.selectedMonth = null;
-          this.selectedYear = null;
+          this.selectedMonth = '';
+          this.selectedYear = '';
           this.isFetching.set(false);
         }
       });
@@ -170,14 +180,14 @@ export class NoticeComponent implements OnInit {
           console.log(this.selectedMonth);
           console.log(this.selectedYear);
           this.societyNotices = res;
-          this.selectedMonth = null;
-          this.selectedYear = null;
+          this.selectedMonth = '';
+          this.selectedYear = '';
           this.isFetching.set(false);
         },
         error: (err) => {
           console.error(this.constants.errorFetchingNotices, err);
-          this.selectedMonth = null;
-          this.selectedYear = null;
+          this.selectedMonth = '';
+          this.selectedYear = '';
           this.isFetching.set(false);
         }
       });
@@ -198,10 +208,12 @@ export class NoticeComponent implements OnInit {
         this.fetchNotices();
         this.visible = false;
         this.content = '';
+        this.showSuccess('Notice issued successfully.');
         this.isFetching.set(false);
       },
       error: (err) => {
         this.isFetching.set(false);
+        this.showError(this.constants.errorAddingNotices);
         console.error(this.constants.errorAddingNotices, err);
       },
     });

@@ -20,6 +20,9 @@ import {
   UserListSuccessResponse,
 } from '../../../interface/user.model';
 import { Constants } from '../../../shared/constants';
+import { Toast } from 'primeng/toast';
+import { Ripple } from 'primeng/ripple';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-user-management',
@@ -37,9 +40,12 @@ import { Constants } from '../../../shared/constants';
     InputTextModule,
     Tooltip,
     Avatar,
+    Toast,
+    Ripple,
   ],
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.scss',
+  providers: [MessageService]
 })
 export class UserManagementComponent implements OnInit {
   @ViewChild('addOfficerForm') addOfficerForm?: NgForm;
@@ -59,7 +65,7 @@ export class UserManagementComponent implements OnInit {
 
   readonly constants = Constants;
 
-  constructor(private route: ActivatedRoute, private api: ApisService) {}
+  constructor(private route: ActivatedRoute, private api: ApisService, private messageService: MessageService) {}
 
   ngOnInit(): void {
     const societyData = this.route.snapshot.data['societyData'] as SocietyData;
@@ -99,6 +105,14 @@ export class UserManagementComponent implements OnInit {
     this.addOfficerForm?.resetForm();
   }
 
+  showSuccess(message: string) {
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
+  }
+
+  showError(message: string) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+  }
+
   fetchOfficers(): void {
     this.api.getOfficers().subscribe({
       next: (res: UserListSuccessResponse) => {
@@ -132,10 +146,12 @@ export class UserManagementComponent implements OnInit {
           this.fetchOfficers();
           this.visible = false;
           this.resetAddOfficerForm();
+          this.showSuccess('Officer added successfully.');
           this.isFetching.set(false);
         },
         error: (err) => {
           this.isFetching.set(false);
+          this.showError('Error in adding officer to the system.');
           console.error(this.constants.errorAddOfficer, err);
         }
       });
@@ -148,10 +164,12 @@ export class UserManagementComponent implements OnInit {
     this.api.deleteResident(residentID).subscribe({
       next: (res) => {
         this.fetchResidents();
+        this.showSuccess('Deletion Successful');
         this.isFetching.set(false);
       },
       error: (err) => {
         this.isFetching.set(false);
+        this.showError('Error in deletion');
         console.error(this.constants.errorDeleteResident, err);
       },
     });
@@ -162,10 +180,12 @@ export class UserManagementComponent implements OnInit {
     this.api.deleteOfficer(officerID).subscribe({
       next: (res) => {
         this.fetchOfficers();
+        this.showSuccess('Deletion successful.');
         this.isFetching.set(false);
       },
       error: (err) => {
         this.isFetching.set(false);
+        this.showError('Error in deletion.');
         console.error(this.constants.errorDeleteOfficer, err);
       },
     });

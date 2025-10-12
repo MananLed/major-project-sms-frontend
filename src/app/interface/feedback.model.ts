@@ -4,18 +4,23 @@ export interface Feedback{
 }
 
 export interface FeedbackData{
+    assignedto: string,
     content: string,
+    date: string,
     flat: string,
     id: string,
     name: string,
     rating: number,
+    request_id: string,
     resident_id: string,
-}
+    servicetype: string,
+    timeslot: string,
+} 
 
 export interface FeedbackSuccessResponse {
   status: 'Success';
   message: string;
-  data: Feedback[];
+  data: FeedbackData[];
 }
 
 export interface ErrorResponse {

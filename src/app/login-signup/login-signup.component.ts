@@ -10,10 +10,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
 import { PasswordModule } from 'primeng/password';
-import { ToastModule } from 'primeng/toast';
+import { Toast, ToastModule } from 'primeng/toast';
 import { MessageModule } from 'primeng/message';
 import { NgIf } from '@angular/common';
 import { LoaderComponent } from '../dashboard/views/loader/loader.component';
+import { Ripple } from 'primeng/ripple';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login-signup',
@@ -31,9 +33,12 @@ import { LoaderComponent } from '../dashboard/views/loader/loader.component';
     FloatLabel,
     NgIf,
     LoaderComponent,
+    Ripple,
+    Toast,
   ],
   templateUrl: './login-signup.component.html',
   styleUrl: './login-signup.component.scss',
+  providers: [MessageService]
 })
 export class LoginSignupComponent {
   isFetching = signal(false);
@@ -54,8 +59,17 @@ export class LoginSignupComponent {
   constructor(
     private api: ApisService,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {}
+
+  showSuccess(message: string) {
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
+  }
+
+  showErrorr(message: string) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+  }
 
   onLogin() {
     this.isFetching.set(true);
@@ -67,6 +81,7 @@ export class LoginSignupComponent {
       .subscribe({
         next: (res: any) => {
           if (res.status === 'Success' && res && res.data) {
+            this.showSuccess('User logged in successfully');
             this.auth.loginUser(res.data.token, res.data.email, res.data.role);
             this.router.navigate(['/dashboard'], {replaceUrl: true});
           }
@@ -75,6 +90,7 @@ export class LoginSignupComponent {
           this.isFetching.set(false);
           this.errorMessage = 'Invalid credentials';
           this.showError = true;
+          this.showErrorr('Invalid Credentials');
 
           setTimeout(() => {
             this.showError = false;
@@ -102,6 +118,7 @@ export class LoginSignupComponent {
         next: (res: any) => {
           if (res.status === 'Success') {
             this.activeTab = 0;
+            this.showSuccess('Sign Up successful.');
           }
         },
         error: (err: any) => {

@@ -3,7 +3,7 @@ import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { AutoComplete } from 'primeng/autocomplete';
+import { AutoComplete, AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -18,6 +18,9 @@ import { LoaderComponent } from '../loader/loader.component';
 import { AuthService } from '../../../service/auth.service';
 import { InvoiceSuccessResponse } from '../../../interface/invoice.model';
 import { Constants } from '../../../shared/constants';
+import { Toast } from 'primeng/toast';
+import { Ripple } from 'primeng/ripple';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-invoice',
@@ -33,58 +36,71 @@ import { Constants } from '../../../shared/constants';
     InputTextModule,
     Tooltip,
     InputMaskModule,
-    Message
+    Message,
+    Toast,
+    Ripple,
   ],
   templateUrl: './invoice.component.html',
   styleUrl: './invoice.component.scss',
+  providers: [MessageService]
 })
 export class InvoiceComponent {
   isFetching = signal(false);
 
   visible: boolean = false;
+
   amount?: number | null;
 
   readonly constants = Constants;
 
   invoiceData!: InvoiceSuccessResponse;
-
-  constructor(
-    private route: ActivatedRoute,
-    private api: ApisService,
-    private auth: AuthService
-  ) {}
-
-  selectedYear: any = null;
-  selectedMonth: any = null;
-
-  filteredYears!: any[];
-  filteredMonths!: any[];
-
-  years: any = [];
-  months: any = [];
-
+  
+  selectedYear: string = '';
+  selectedMonth: string = '';
   userRole: string | null = null;
+
+  filteredYears: Array<{ label: string; value: string }> = [];
+  filteredMonths: Array<{ label: string; value: string }> = [];
+
+  years: string[] = [];
+  months: string[] = [];
+  
   isAdmin: boolean = false;
   isOfficer: boolean = false;
   isResident: boolean = false;
 
-  filterYears(event: any): void {
+  constructor(
+    private route: ActivatedRoute,
+    private api: ApisService,
+    private auth: AuthService,
+    private messageService: MessageService,
+  ) {}
+
+  showSuccess(message: string) {
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
+  }
+
+  showError(message: string) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+  }
+
+  filterYears(event: AutoCompleteCompleteEvent): void {
     const query = event.query;
-    this.filteredYears = this.years.filter((year: any) =>
+    this.years = this.years.filter((year: string) =>
       year.toString().toLowerCase().includes(query.toLowerCase())
     );
-    this.filteredYears = this.years.map((year: any) => ({
+    this.filteredYears = this.years.map((year: string) => ({
       label: year,
       value: year,
     }));
   }
 
-  filterMonths(event: any): void {
+  filterMonths(event: AutoCompleteCompleteEvent): void {
     const query = event.query;
-    this.filteredMonths = this.months.filter((month: any) =>
+    this.months = this.months.filter((month: string) =>
       month.toString().toLowerCase().includes(query.toLowerCase())
     );
-    this.filteredMonths = this.months.map((month: any) => ({
+    this.filteredMonths = this.months.map((month: string) => ({
       label: month,
       value: month,
     }));
@@ -107,8 +123,8 @@ export class InvoiceComponent {
 
     console.log(this.invoiceData);
 
-    const yearsSet = new Set<any>();
-    const monthsSet = new Set<any>();
+    const yearsSet = new Set<string>();
+    const monthsSet = new Set<string>();
 
     this.invoiceData.data.forEach((item: any) => {
       yearsSet.add(item.year);
@@ -119,14 +135,11 @@ export class InvoiceComponent {
 
     this.months = [...monthsSet];
 
-    this.filteredYears = [...this.years];
-    this.filteredMonths = [...this.months];
-
-    this.filteredYears = this.years.map((year: any) => ({
+    this.filteredYears = this.years.map((year: string) => ({
       label: year,
       value: year,
     }));
-    this.filteredMonths = this.months.map((month: any) => ({
+    this.filteredMonths = this.months.map((month: string) => ({
       label: month,
       value: month,
     }));
@@ -160,10 +173,12 @@ export class InvoiceComponent {
         this.fetchInvoices();
         this.visible = false;
         this.amount = null;
+        this.showSuccess('Invoice issued successfully.');
         this.isFetching.set(false);
       },
       error: (err) => {
         this.isFetching.set(false);
+        this.showError(this.constants.errorAddingInvoice);
         console.error(this.constants.errorAddingInvoice, err);
       },
     });
@@ -182,14 +197,14 @@ export class InvoiceComponent {
       this.api.searchInvoice(null, this.selectedYear).subscribe({
         next: (res) => {
           this.invoiceData = res;
-          this.selectedMonth = null;
-          this.selectedYear = null;
+          this.selectedMonth = '';
+          this.selectedYear = '';
           this.isFetching.set(false);
         },
         error: (err) => {
           console.error(this.constants.errorSearchingInvoice, err);
-          this.selectedMonth = null;
-          this.selectedYear = null;
+          this.selectedMonth = '';
+          this.selectedYear = '';
           this.isFetching.set(false);
         },
       });
@@ -212,14 +227,14 @@ export class InvoiceComponent {
           } else {
             this.invoiceData = { status: 'Success', message: '', data: [] };
           }
-          this.selectedMonth = null;
-          this.selectedYear = null;
+          this.selectedMonth = '';
+          this.selectedYear = '';
           this.isFetching.set(false);
         },
         error: (err) => {
           console.error(this.constants.errorSearchingInvoice, err);
-          this.selectedMonth = null;
-          this.selectedYear = null;
+          this.selectedMonth = '';
+          this.selectedYear = '';
           this.isFetching.set(false);
           this.invoiceData = { status: 'Success', message: '', data: [] };
         },

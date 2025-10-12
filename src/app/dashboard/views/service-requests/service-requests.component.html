@@ -1,44 +1,41 @@
-<div class="requests">
-  <div class="total">
-    <div class="label">
+<div class="requests-grid">
+  <div class="request-card total">
+    <div class="info">
       <h3>Total Requests</h3>
-    </div>
-    <div class="total-count">
-      <p-avatar
-        label="{{ totalRequestCount }}"
-        class="mr-1"
-        size="large"
-        id="label"
-      />
+      <div class="requestcount">
+        <p-avatar label="{{ totalRequestCount }}" size="large" class="count" />
+      </div>
     </div>
   </div>
-  <div class="pending">
-    <div class="label">
+
+  <div class="request-card pending">
+    <div class="info">
       <h3>Pending Requests</h3>
-    </div>
-    <div class="pending-count">
-      <p-avatar
-        label="{{ pendingRequestCount }}"
-        class="mr-1"
-        size="large"
-        id="label"
-      />
+      <div class="requestcount">
+        <p-avatar label="{{ pendingRequestCount }}" size="large" class="count" />
+      </div>
     </div>
   </div>
-  <div class="approved">
-    <div class="label">
+
+  <div class="request-card approved">
+    <div class="info">
       <h3>Approved Requests</h3>
+      <div class="requestcount">
+        <p-avatar label="{{ approvedRequestCount }}" size="large" class="count" />
+      </div>
     </div>
-    <div class="approved-count">
-      <p-avatar
-        label="{{ approvedRequestCount }}"
-        class="mr-1"
-        size="large"
-        id="label"
-      />
+  </div>
+
+  <div class="request-card completed">
+    <div class="info">
+      <h3>Completed Requests</h3>
+      <div class="requestcount">
+        <p-avatar label="{{ completedRequestCount }}" size="large" class="count" />
+      </div>
     </div>
   </div>
 </div>
+
 
 <div class="filter-requests">
   <p><b>Filter Requests</b></p>
@@ -69,8 +66,8 @@
     />
     <p-button
       [disabled]="
-        (!selectedService && selectedStatus) ||
-        (!selectedStatus && selectedService)
+        (selectedService == '' && selectedStatus != '') ||
+        (selectedStatus == '' && selectedService != '')
       "
       pTooltip="Search Requests"
       icon="pi pi-search"
@@ -112,6 +109,8 @@
           </div>
         </th>
         <th>Service Type</th>
+        <th>Date</th>
+        <th>Assigned To</th>
         <th>Actions</th>
       </tr>
     </ng-template>
@@ -135,6 +134,14 @@
         </td>
         <td>{{ data.time_slot }}</td>
         <td>{{ data.service_type | titlecase }}</td>
+        <td>{{data.date}}</td>
+        <td>
+          @if(data.assignedto === ''){
+            -- 
+          }@else {
+            {{data.assignedto}}
+          }
+        </td>
         @if (isResident) {
         <td>
           <div class="actions">
@@ -158,6 +165,8 @@
               <p-button
                 pTooltip="Give Feedback"
                 icon="pi pi-pencil"
+                [disabled]="data.feedbackgiven"
+                (onClick)="showIssueFeedbackDialog(data.request_id)"
               ></p-button>
             }
           </div>
@@ -168,7 +177,7 @@
             pTooltip="Approve Request"
             icon="pi pi-check"
             [disabled]="data.status === 'approved'"
-            (onClick)="approveRequest(data.request_id)"
+            (onClick)="showApproveRequestDialog(data.request_id)"
           ></p-button>
         </td>
         }@else {
@@ -177,6 +186,7 @@
             pTooltip="Mark as Complete"
             icon="pi pi-check-circle"
             [disabled]="data.status === 'completed'"
+            (onClick)="markRequestComplete(data.request_id)"
           ></p-button>
           </td>
         }
@@ -271,3 +281,91 @@
     />
   </div>
 </p-dialog>
+
+<p-dialog
+  header="Approve Service Request"
+  [(visible)]="displayApproveRequestDialog"
+  (onHide)="hideApproveRequestDialog()"
+  [modal]="true"
+  [style]="{ width: '25rem', height: '16rem' }"
+>
+
+<br>
+<form #approveForm="ngForm" (ngSubmit)="(approveRequest(approveForm))">
+
+    <p-floatlabel variant="on">
+        <input
+          pInputText
+          type="text"
+          id="requestapprove"
+          name="requestapprove"
+          [(ngModel)]="assignedTo"
+          autocomplete="off"
+          required
+          #assignedToRef="ngModel"
+        />
+        <label for="assignedTo">Assigned To</label>
+      </p-floatlabel>
+
+    <small 
+      class="p-error" 
+      *ngIf="assignedToRef.invalid && (assignedToRef.dirty || assignedToRef.touched)">
+      Assigned To is required
+    </small>
+    <br><br>
+
+  <div class="buttons">
+    <p-button
+      label="Cancel"
+      (click)="hideApproveRequestDialog()"
+      class="p-button-text"
+      severity="contrast"
+    />
+    <p-button
+      label="Approve"
+      type="submit"
+      class="p-button-text"
+      [disabled]="approveForm.invalid"
+    />
+  </div>
+</form>
+
+</p-dialog>
+
+<p-dialog
+  header="Submit Feedback"
+  [(visible)]="displayIssueFeedbackDialog"
+  (onHide)="hideIssueFeedbackDialog()"
+  [modal]="true"
+  [style]="{ width: '25rem', height: '22rem' }"
+>
+
+<br>
+<form #feedbackForm="ngForm" (ngSubmit)="issueFeedback(feedbackForm)">
+  <div class="card flex justify-center">
+    <p-rating name="rating" [(ngModel)]="rating" />
+  </div>
+  <br><br>
+  <div class="card flex justify-center">
+    <textarea rows="5" cols="50" pTextarea maxlength="500" name="content" placeholder="Please enter a review" [(ngModel)]="content"></textarea>
+  </div>
+  <br><br>
+
+  <div class="buttons">
+    <p-button
+      label="Cancel"
+      (click)="hideIssueFeedbackDialog()"
+      class="p-button-text"
+      severity="contrast"
+    />
+    <p-button
+      label="Submit"
+      type="submit"
+      class="p-button-text"
+      [disabled]="feedbackForm.invalid || !rating"
+    />
+  </div>
+</form>
+</p-dialog>
+
+<p-toast/>
