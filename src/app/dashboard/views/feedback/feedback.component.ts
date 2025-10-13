@@ -58,11 +58,11 @@ export class FeedbackComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private auth: AuthService, private api:ApisService, private messageService: MessageService) {}
 
-  showSuccess(message: string) {
+  showSuccess(message: string): void {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
   }
 
-  showError(message: string) {
+  showError(message: string): void {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
   }
 

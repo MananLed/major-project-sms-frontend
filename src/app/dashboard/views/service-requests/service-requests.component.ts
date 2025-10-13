@@ -4,6 +4,7 @@ import { Component, signal, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
+import { MessageService } from 'primeng/api';
 import { AutoComplete, AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -13,14 +14,13 @@ import { Avatar } from 'primeng/avatar';
 import { SelectItem } from 'primeng/select';
 import { FloatLabel } from "primeng/floatlabel";
 import { RatingModule } from 'primeng/rating';
+import { Toast } from 'primeng/toast';
+import { Ripple } from 'primeng/ripple';
 
 import { AuthService } from '../../../service/auth.service';
 import { ApisService } from '../../../service/apis.service';
 import { LoaderComponent } from '../loader/loader.component';
 import { Constants } from '../../../shared/constants';
-import { Toast } from 'primeng/toast';
-import { Ripple } from 'primeng/ripple';
-import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-service-requests',
@@ -46,38 +46,47 @@ import { MessageService } from 'primeng/api';
 export class ServiceRequestsComponent {
   selectedService: string = '';
   selectedStatus: string = '';
+  userRole: string | null = null;
+  assignedTo: string = '';
+
   filteredService: Array<{ label: string; value: string }> = [];
   filteredStatus: Array<{ label: string; value: string }> = [];
-  userRole: string | null = null;
+  
   isAdmin: boolean = false;
   isOfficer: boolean = false;
   isResident: boolean = false;
+  displayAddRequestDialog: boolean = false;
+  displayRescheduleRequestDialog: boolean = false;
+
   totalRequestCount: number = 0;
   pendingRequestCount: number = 0;
   approvedRequestCount: number = 0;
+  completedRequestCount: number = 0;
+
   isFetching = signal(false);
-  displayAddRequestDialog: boolean = false;
-  displayRescheduleRequestDialog: boolean = false;
+  
+  displayApproveRequestDialog: boolean = false;
+  displayIssueFeedbackDialog: boolean = false;
+  
+  filteredTimeSlots: SelectItem[] = [];
+  allTimeSlots: SelectItem[] = [];
+
   allRequestData: any;
   pendingRequestData: any;
   approvedRequestData: any;
+  completedRequestData: any;
+  
   selectedServiceType: any | null = null;
   selectedTimeSlot: any | null = null;
   selectedTimeSlotIndex: any | null = null;
   selectedReTimeSlot: any | null = null;
   fetchedTimeSlots: any | null = null;
-  filteredTimeSlots: SelectItem[] = [];
-  allTimeSlots: SelectItem[] = [];
   selectedReServiceType: any | null;
   selectedReServiceID: any | null;
-  completedRequestData: any;
-  completedRequestCount: number = 0;
 
-  displayApproveRequestDialog: boolean = false;
-  displayIssueFeedbackDialog: boolean = false;
   @ViewChild('approveForm') approveForm?: NgForm;
   @ViewChild('feedbackForm') feedbackForm?: NgForm;
-  assignedTo: string = '';
+  
   requestID: any;
   rating: number = 0;
   content: string = '';
@@ -100,7 +109,7 @@ export class ServiceRequestsComponent {
     { label: 'Approved', value: 'Approved' },
     { label: 'Completed', value: 'Completed'},
   ];
-  ngOnInit() {
+  ngOnInit(): void {
     const requestData = this.route.snapshot.data['requestData'];
 
     console.log(requestData);
@@ -157,11 +166,11 @@ export class ServiceRequestsComponent {
     );
   }
 
-  showSuccess(message: string) {
+  showSuccess(message: string): void {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
   }
 
-  showError(message: string) {
+  showError(message: string): void {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
   }
 
@@ -175,18 +184,18 @@ export class ServiceRequestsComponent {
     console.log(selectedItem);
   }
 
-  showAddRequestDialog() {
+  showAddRequestDialog(): void {
     this.displayAddRequestDialog = true;
   }
 
-  hideAddRequestDialog() {
+  hideAddRequestDialog(): void {
     this.displayAddRequestDialog = false;
     this.selectedServiceType = null;
     this.selectedTimeSlot = null;
     this.selectedTimeSlotIndex = null;
   }
 
-  showRescheduleRequestDialog(typeOfService: any, serviceID: any) {
+  showRescheduleRequestDialog(typeOfService: any, serviceID: any): void {
     this.displayRescheduleRequestDialog = true;
     this.selectedReServiceType = typeOfService;
     this.selectedReServiceID = serviceID;
@@ -194,7 +203,7 @@ export class ServiceRequestsComponent {
     console.log(this.selectedReServiceID);
   }
 
-  hideRescheduleRequestDialog() {
+  hideRescheduleRequestDialog(): void {
     this.displayRescheduleRequestDialog = false;
     this.selectedReServiceID = null;
     this.selectedReServiceType = null;
@@ -233,7 +242,7 @@ export class ServiceRequestsComponent {
       });
   }
 
-  fetchAllRequests(): any {
+  fetchAllRequests(): void {
     this.api.getAllRequests().subscribe({
       next: (res) => {
         const requestData = res;
