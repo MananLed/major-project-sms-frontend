@@ -96,3 +96,17 @@
   border-radius: $curve;
 }
 
+.invoice-table{
+  th {
+    ::ng-deep .p-sortable-column-icon{
+      display: none;
+    }
+
+
+    ::ng-deep p-sortIcon::after {
+      content: 'unfold_more';
+      font-family: 'Material Icons';
+      
+    }
+  }
+}

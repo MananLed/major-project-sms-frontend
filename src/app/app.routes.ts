@@ -104,5 +104,6 @@ export const routes: Routes = [
         (c) => c.AccessDeniedComponent
       ),
   },
+  {path: 'access-denied', redirectTo: 'access-denied', pathMatch: 'full'},
   { path: '**', redirectTo: 'login', pathMatch: 'full' },
 ];

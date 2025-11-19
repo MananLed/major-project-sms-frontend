@@ -13,7 +13,7 @@ import { ServiceRequest } from '../interface/request.model';
 })
 export class ApisService {
 
-  baseUrl = "http://localhost:8080";
+  baseUrl = "https://h2el0vkuke.execute-api.ap-south-1.amazonaws.com/v1";
 
   constructor(private http:HttpClient) {
 
@@ -118,8 +118,8 @@ export class ApisService {
     return this.http.patch(`${this.baseUrl}/service/approve/${id}`, assignedTo);
   }
 
-  rescheduleRequest(id: any, slot: {slot: number}): Observable<any>{
-    return this.http.patch(`${this.baseUrl}/service/reschedule/${id}`, slot);
+  rescheduleRequest(id: any, slotid: {slotid: number}): Observable<any>{
+    return this.http.patch(`${this.baseUrl}/service/reschedule/${id}`, slotid);
   }
 
   completeRequest(id: any): Observable<any>{

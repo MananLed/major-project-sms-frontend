@@ -51,6 +51,7 @@
 
   <div class="card invoice-table">
     <h3>All Invoices</h3>
+    <br>
     <p-table
       *ngIf="invoiceData!.data!.length > 0; else noInvoice"
       [value]="invoiceData!.data"
@@ -60,6 +61,7 @@
       [rowsPerPageOptions]="[5,10,20]"
       responsiveLayout="scroll"
       [tableStyle]="{ 'min-width': '60rem' }"
+      class="invoice-table"
     >
       <ng-template #header>
         <tr>
@@ -127,10 +129,9 @@
       <p-button label="Issue" [disabled]="!amount" (onClick)="issueInvoice()"></p-button>
     </div>
   </p-dialog>
-
-  @if (isFetching()) {
-    <app-loader></app-loader>
-  }
 </div>
+@if (isFetching()) {
+  <app-loader></app-loader>
+}
 
 <p-toast></p-toast>
