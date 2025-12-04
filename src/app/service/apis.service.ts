@@ -13,7 +13,7 @@ import { ServiceRequest } from '../interface/request.model';
 })
 export class ApisService {
 
-  baseUrl = "https://h2el0vkuke.execute-api.ap-south-1.amazonaws.com/v1";
+  baseUrl = "https://upkeepzapi.publicvm.com";
 
   constructor(private http:HttpClient) {
 

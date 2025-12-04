@@ -519,4 +519,16 @@ export class ServiceRequestsComponent {
         });
     }
   }
+
+  isTodayAndPending(data: any) :boolean{
+    if (data.status !== 'pending'){
+      return true;
+    }
+
+    const [day, month, year] = data.date.split('-').map(Number);
+    const itemDate = new Date(year, month - 1, day);
+    const today = new Date();
+
+    return itemDate.getDate() === today.getDate() && itemDate.getMonth() === today.getMonth() && itemDate.getFullYear() === today.getFullYear();
+  }
 }

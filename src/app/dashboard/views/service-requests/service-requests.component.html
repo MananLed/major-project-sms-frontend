@@ -12,7 +12,11 @@
     <div class="info">
       <h3>Pending Requests</h3>
       <div class="requestcount">
-        <p-avatar label="{{ pendingRequestCount }}" size="large" class="count" />
+        <p-avatar
+          label="{{ pendingRequestCount }}"
+          size="large"
+          class="count"
+        />
       </div>
     </div>
   </div>
@@ -21,7 +25,11 @@
     <div class="info">
       <h3>Approved Requests</h3>
       <div class="requestcount">
-        <p-avatar label="{{ approvedRequestCount }}" size="large" class="count" />
+        <p-avatar
+          label="{{ approvedRequestCount }}"
+          size="large"
+          class="count"
+        />
       </div>
     </div>
   </div>
@@ -30,12 +38,15 @@
     <div class="info">
       <h3>Completed Requests</h3>
       <div class="requestcount">
-        <p-avatar label="{{ completedRequestCount }}" size="large" class="count" />
+        <p-avatar
+          label="{{ completedRequestCount }}"
+          size="large"
+          class="count"
+        />
       </div>
     </div>
   </div>
 </div>
-
 
 <div class="filter-requests">
   <p><b>Filter Requests</b></p>
@@ -109,12 +120,18 @@
           </div>
         </th>
         <th>Service Type</th>
-        <th>Date</th>
+        <th pSortableColumn="date">
+          <div class="flex items-center gap-2">
+            Date
+            <p-sortIcon field="flat" />
+          </div>
+        </th>
         <th>Assigned To</th>
         <th>Actions</th>
       </tr>
     </ng-template>
     <ng-template #body let-data>
+      @if (isTodayAndPending(data)) {
       <tr>
         <td>{{ data.flat }}</td>
         <td>
@@ -127,47 +144,45 @@
             {{ data.status | uppercase }}
           </div>
           }@else{
-            <div class="comp">
-              {{data.status | uppercase }}
-            </div>
+          <div class="comp">
+            {{ data.status | uppercase }}
+          </div>
           }
         </td>
         <td>{{ data.time_slot }}</td>
         <td>{{ data.service_type | titlecase }}</td>
-        <td>{{data.date}}</td>
+        <td>{{ data.date }}</td>
         <td>
-          @if(data.assignedto === ''){
-            -- 
-          }@else {
-            {{data.assignedto}}
+          @if(data.assignedto === ''){ -- }@else {
+          {{ data.assignedto }}
           }
         </td>
         @if (isResident) {
         <td>
           <div class="actions">
             @if(data.status === 'pending' || data.status === 'approved'){
-              <p-button
-                pTooltip="Reschedule Request"
-                icon="pi pi-stopwatch"
-                (onClick)="
-                  showRescheduleRequestDialog(data.service_type, data.request_id)
-                "
-                [disabled]="data.status === 'approved'"
-              ></p-button>
-              <p-button
-                pTooltip="Cancel Request"
-                icon="pi pi-trash"
-                severity="danger"
-                [disabled]="data.status === 'approved'"
-                (onClick)="deleteRequest(data.request_id)"
-              ></p-button>
+            <p-button
+              pTooltip="Reschedule Request"
+              icon="pi pi-stopwatch"
+              (onClick)="
+                showRescheduleRequestDialog(data.service_type, data.request_id)
+              "
+              [disabled]="data.status === 'approved'"
+            ></p-button>
+            <p-button
+              pTooltip="Cancel Request"
+              icon="pi pi-trash"
+              severity="danger"
+              [disabled]="data.status === 'approved'"
+              (onClick)="deleteRequest(data.request_id)"
+            ></p-button>
             }@else if(data.status === 'completed'){
-              <p-button
-                pTooltip="Give Feedback"
-                icon="pi pi-pencil"
-                [disabled]="data.feedbackgiven"
-                (onClick)="showIssueFeedbackDialog(data.request_id)"
-              ></p-button>
+            <p-button
+              pTooltip="Give Feedback"
+              icon="pi pi-pencil"
+              [disabled]="data.feedbackgiven"
+              (onClick)="showIssueFeedbackDialog(data.request_id)"
+            ></p-button>
             }
           </div>
         </td>
@@ -181,16 +196,17 @@
           ></p-button>
         </td>
         }@else {
-          <td>
+        <td>
           <p-button
             pTooltip="Mark as Complete"
             icon="pi pi-check-circle"
             [disabled]="data.status === 'completed'"
             (onClick)="markRequestComplete(data.request_id)"
           ></p-button>
-          </td>
+        </td>
         }
       </tr>
+    }
     </ng-template>
   </p-table>
   <ng-template #noRequest>
@@ -289,47 +305,47 @@
   [modal]="true"
   [style]="{ width: '25rem', height: '16rem' }"
 >
-
-<br>
-<form #approveForm="ngForm" (ngSubmit)="(approveRequest(approveForm))">
-
+  <br />
+  <form #approveForm="ngForm" (ngSubmit)="approveRequest(approveForm)">
     <p-floatlabel variant="on">
-        <input
-          pInputText
-          type="text"
-          id="requestapprove"
-          name="requestapprove"
-          [(ngModel)]="assignedTo"
-          autocomplete="off"
-          required
-          #assignedToRef="ngModel"
-        />
-        <label for="assignedTo">Assigned To</label>
-      </p-floatlabel>
+      <input
+        pInputText
+        type="text"
+        id="requestapprove"
+        name="requestapprove"
+        [(ngModel)]="assignedTo"
+        autocomplete="off"
+        required
+        #assignedToRef="ngModel"
+      />
+      <label for="assignedTo">Assigned To</label>
+    </p-floatlabel>
 
-    <small 
-      class="p-error" 
-      *ngIf="assignedToRef.invalid && (assignedToRef.dirty || assignedToRef.touched)">
+    <small
+      class="p-error"
+      *ngIf="
+        assignedToRef.invalid && (assignedToRef.dirty || assignedToRef.touched)
+      "
+    >
       Assigned To is required
     </small>
-    <br><br>
+    <br /><br />
 
-  <div class="buttons">
-    <p-button
-      label="Cancel"
-      (click)="hideApproveRequestDialog()"
-      class="p-button-text"
-      severity="contrast"
-    />
-    <p-button
-      label="Approve"
-      type="submit"
-      class="p-button-text"
-      [disabled]="approveForm.invalid"
-    />
-  </div>
-</form>
-
+    <div class="buttons">
+      <p-button
+        label="Cancel"
+        (click)="hideApproveRequestDialog()"
+        class="p-button-text"
+        severity="contrast"
+      />
+      <p-button
+        label="Approve"
+        type="submit"
+        class="p-button-text"
+        [disabled]="approveForm.invalid"
+      />
+    </div>
+  </form>
 </p-dialog>
 
 <p-dialog
@@ -339,33 +355,40 @@
   [modal]="true"
   [style]="{ width: '25rem', height: '22rem' }"
 >
+  <br />
+  <form #feedbackForm="ngForm" (ngSubmit)="issueFeedback(feedbackForm)">
+    <div class="card flex justify-center">
+      <p-rating name="rating" [(ngModel)]="rating" />
+    </div>
+    <br /><br />
+    <div class="card flex justify-center">
+      <textarea
+        rows="5"
+        cols="50"
+        pTextarea
+        maxlength="500"
+        name="content"
+        placeholder="Please enter a review"
+        [(ngModel)]="content"
+      ></textarea>
+    </div>
+    <br /><br />
 
-<br>
-<form #feedbackForm="ngForm" (ngSubmit)="issueFeedback(feedbackForm)">
-  <div class="card flex justify-center">
-    <p-rating name="rating" [(ngModel)]="rating" />
-  </div>
-  <br><br>
-  <div class="card flex justify-center">
-    <textarea rows="5" cols="50" pTextarea maxlength="500" name="content" placeholder="Please enter a review" [(ngModel)]="content"></textarea>
-  </div>
-  <br><br>
-
-  <div class="buttons">
-    <p-button
-      label="Cancel"
-      (click)="hideIssueFeedbackDialog()"
-      class="p-button-text"
-      severity="contrast"
-    />
-    <p-button
-      label="Submit"
-      type="submit"
-      class="p-button-text"
-      [disabled]="feedbackForm.invalid || !rating"
-    />
-  </div>
-</form>
+    <div class="buttons">
+      <p-button
+        label="Cancel"
+        (click)="hideIssueFeedbackDialog()"
+        class="p-button-text"
+        severity="contrast"
+      />
+      <p-button
+        label="Submit"
+        type="submit"
+        class="p-button-text"
+        [disabled]="feedbackForm.invalid || !rating"
+      />
+    </div>
+  </form>
 </p-dialog>
 
-<p-toast/>
+<p-toast />
