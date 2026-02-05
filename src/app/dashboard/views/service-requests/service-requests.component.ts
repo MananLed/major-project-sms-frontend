@@ -233,12 +233,15 @@ export class ServiceRequestsComponent {
           this.displayRescheduleRequestDialog = false;
           this.selectedReServiceID = null;
           this.selectedTimeSlotIndex = null;
-          this.showSuccess('Request rescheduled successfully.')
+          this.showSuccess(res.message)
           this.isFetching.set(false);
         },
         error: (err) => {
           this.isFetching.set(false);
-          this.showError('Error in rescheduling request.')
+          const customMessage = err.error?.message || 'An unexpected error occurred';
+          const customCode = err.error?.errorcode || 'UNKNOWN';
+          this.showError(customMessage);
+          console.log(`Error Code: ${customCode}`);
           console.error(this.constants.errorReschedulingRequests, err);
         },
       });
@@ -279,6 +282,10 @@ export class ServiceRequestsComponent {
       },
       error: (err) => {
         console.error(this.constants.errorFetchingRequestOfResident, err);
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
       },
     });
   }
@@ -290,13 +297,16 @@ export class ServiceRequestsComponent {
       next: (res) => {
         this.fetchAllRequests();
         this.hideApproveRequestDialog();
-        this.showSuccess('Request approved successfully.')
+        this.showSuccess(res.message)
         this.isFetching.set(false);
       },
       error: (err) => {
         this.isFetching.set(false);
         this.hideApproveRequestDialog();
-        this.showError('Error in approving request.')
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
         console.error(this.constants.errorFetchingAllRequests, err);
       },
     });
@@ -324,13 +334,16 @@ export class ServiceRequestsComponent {
       next: (res) => {
         this.hideIssueFeedbackDialog();
         this.fetchRequestsOfResident();
-        this.showSuccess('Feedback issued successfully.')
+        this.showSuccess(res.message)
         this.isFetching.set(false);
       },
       error: (err) => {
         this.isFetching.set(false);
         this.hideIssueFeedbackDialog();
-        this.showError('Error in giving feedback.')
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
         console.error(this.constants.errorAddingFeedbacks, err);
       }
     })
@@ -347,7 +360,10 @@ export class ServiceRequestsComponent {
       },
       error: (err) => {
         this.isFetching.set(false);
-        this.showError('Error in marking request complete')
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
         console.error(this.constants.errorCompletingRequest, err);
       }
     })
@@ -363,7 +379,10 @@ export class ServiceRequestsComponent {
       },
       error: (err) => {
         this.isFetching.set(false);
-        this.showError('Error in deleting service request.')
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
         console.error(this.constants.errorDeleteRequest, err);
       },
     });
@@ -414,6 +433,10 @@ export class ServiceRequestsComponent {
       },
       error: (err) => {
         console.error(this.constants.errorFetchingRequestOfResident, err);
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
       },
     });
   }
@@ -433,7 +456,7 @@ export class ServiceRequestsComponent {
         next: (res) => {
           console.log(res);
           this.fetchRequestsOfResident();
-          this.showSuccess('Request submitted successfully.')
+          this.showSuccess(res.message)
           this.displayAddRequestDialog = false;
           this.isFetching.set(false);
           this.selectedServiceType = null;
@@ -442,7 +465,10 @@ export class ServiceRequestsComponent {
         },
         error: (err) => {
           this.isFetching.set(false);
-          this.showError('Error in submitting request.')
+          const customMessage = err.error?.message || 'An unexpected error occurred';
+          const customCode = err.error?.errorcode || 'UNKNOWN';
+          this.showError(customMessage);
+          console.log(`Error Code: ${customCode}`);
           console.error(this.constants.errorAddingRequest, err);
         },
       });
@@ -468,6 +494,10 @@ export class ServiceRequestsComponent {
       error: (err) => {
         this.isFetching.set(false);
         console.error(this.constants.errorFetchingTimeSlots, err);
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
       },
     });
   }
@@ -512,6 +542,10 @@ export class ServiceRequestsComponent {
           },
           error: (err) => {
             console.log(this.constants.errorSearchingRequests, err);
+            const customMessage = err.error?.message || 'An unexpected error occurred';
+            const customCode = err.error?.errorcode || 'UNKNOWN';
+            this.showError(customMessage);
+            console.log(`Error Code: ${customCode}`);
             this.selectedService = '';
             this.selectedStatus = '';
             this.isFetching.set(false);

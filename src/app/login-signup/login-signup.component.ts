@@ -81,7 +81,7 @@ export class LoginSignupComponent {
       .subscribe({
         next: (res: any) => {
           if (res.status === 'Success' && res && res.data) {
-            this.showSuccess('User logged in successfully');
+            this.showSuccess(res.message);
             this.auth.loginUser(res.data.token, res.data.email, res.data.role);
             this.router.navigate(['/dashboard'], {replaceUrl: true});
           }
@@ -90,7 +90,10 @@ export class LoginSignupComponent {
           this.isFetching.set(false);
           this.errorMessage = 'Invalid credentials';
           this.showError = true;
-          this.showErrorr('Invalid Credentials');
+          const customMessage = err.error?.message || 'An unexpected error occurred';
+          const customCode = err.error?.errorcode || 'UNKNOWN';
+          this.showErrorr(customMessage);
+          console.log(`Error Code: ${customCode}`);
 
           setTimeout(() => {
             this.showError = false;
@@ -125,6 +128,11 @@ export class LoginSignupComponent {
           this.isFetching.set(false);
           this.errorMessage = 'Invalid details';
           this.showError = true;
+
+          const customMessage = err.error?.message || 'An unexpected error occurred';
+          const customCode = err.error?.errorcode || 'UNKNOWN';
+          this.showErrorr(customMessage);
+          console.log(`Error Code: ${customCode}`);
 
           setTimeout(() => {
             this.showError = false;

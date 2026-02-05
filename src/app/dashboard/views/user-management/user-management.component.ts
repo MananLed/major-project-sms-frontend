@@ -121,6 +121,10 @@ export class UserManagementComponent implements OnInit {
       },
       error: (err) => {
         console.error(this.constants.errorOfficerDetailFetch, err);
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
       },
     });
   }
@@ -133,6 +137,10 @@ export class UserManagementComponent implements OnInit {
       },
       error: (err) => {
         console.error(this.constants.errorResidentDetailFetch, err);
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
       },
     });
   }
@@ -146,12 +154,15 @@ export class UserManagementComponent implements OnInit {
           this.fetchOfficers();
           this.visible = false;
           this.resetAddOfficerForm();
-          this.showSuccess('Officer added successfully.');
+          this.showSuccess(res.message);
           this.isFetching.set(false);
         },
         error: (err) => {
           this.isFetching.set(false);
-          this.showError('Error in adding officer to the system.');
+          const customMessage = err.error?.message || 'An unexpected error occurred';
+          const customCode = err.error?.errorcode || 'UNKNOWN';
+          this.showError(customMessage);
+          console.log(`Error Code: ${customCode}`);
           console.error(this.constants.errorAddOfficer, err);
         }
       });
@@ -164,12 +175,15 @@ export class UserManagementComponent implements OnInit {
     this.api.deleteResident(residentID).subscribe({
       next: (res) => {
         this.fetchResidents();
-        this.showSuccess('Deletion Successful');
+        this.showSuccess(res.message);
         this.isFetching.set(false);
       },
       error: (err) => {
         this.isFetching.set(false);
-        this.showError('Error in deletion');
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
         console.error(this.constants.errorDeleteResident, err);
       },
     });
@@ -180,12 +194,15 @@ export class UserManagementComponent implements OnInit {
     this.api.deleteOfficer(officerID).subscribe({
       next: (res) => {
         this.fetchOfficers();
-        this.showSuccess('Deletion successful.');
+        this.showSuccess(res.message);
         this.isFetching.set(false);
       },
       error: (err) => {
         this.isFetching.set(false);
-        this.showError('Error in deletion.');
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
         console.error(this.constants.errorDeleteOfficer, err);
       },
     });

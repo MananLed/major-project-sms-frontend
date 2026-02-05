@@ -141,6 +141,10 @@ export class NoticeComponent implements OnInit {
       },
       error: (err) => {
         console.error(this.constants.errorFetchingNotices, err);
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
       },
     });
   }
@@ -164,6 +168,10 @@ export class NoticeComponent implements OnInit {
         },
         error: (err) => {
           console.error(this.constants.errorSearchingNotices, err);
+          const customMessage = err.error?.message || 'An unexpected error occurred';
+          const customCode = err.error?.errorcode || 'UNKNOWN';
+          this.showError(customMessage);
+          console.log(`Error Code: ${customCode}`);
           this.selectedMonth = '';
           this.selectedYear = '';
           this.isFetching.set(false);
@@ -186,6 +194,10 @@ export class NoticeComponent implements OnInit {
         },
         error: (err) => {
           console.error(this.constants.errorFetchingNotices, err);
+          const customMessage = err.error?.message || 'An unexpected error occurred';
+          const customCode = err.error?.errorcode || 'UNKNOWN';
+          this.showError(customMessage);
+          console.log(`Error Code: ${customCode}`);
           this.selectedMonth = '';
           this.selectedYear = '';
           this.isFetching.set(false);
@@ -213,7 +225,10 @@ export class NoticeComponent implements OnInit {
       },
       error: (err) => {
         this.isFetching.set(false);
-        this.showError(this.constants.errorAddingNotices);
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
         console.error(this.constants.errorAddingNotices, err);
       },
     });

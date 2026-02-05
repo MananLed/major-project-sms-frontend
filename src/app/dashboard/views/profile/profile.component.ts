@@ -130,6 +130,10 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         console.error(this.constants.errorProfileFetch, err);
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
       },
     });
   }
@@ -180,7 +184,10 @@ export class ProfileComponent implements OnInit {
         },
         error: (err) => {
           this.isFetching.set(false);
-          this.showError(this.constants.errorProfileUpdate);
+          const customMessage = err.error?.message || 'An unexpected error occurred';
+          const customCode = err.error?.errorcode || 'UNKNOWN';
+          this.showError(customMessage);
+          console.log(`Error Code: ${customCode}`);
           console.error(this.constants.errorProfileUpdate, err);
         },
       });
@@ -215,7 +222,10 @@ export class ProfileComponent implements OnInit {
         },
         error: (err) => {
           this.isFetching.set(false);
-          this.showError(this.constants.errorPasswordUpdate);
+          const customMessage = err.error?.message || 'An unexpected error occurred';
+          const customCode = err.error?.errorcode || 'UNKNOWN';
+          this.showError(customMessage);
+          console.log(`Error Code: ${customCode}`);
           console.error(this.constants.errorPasswordUpdate, err);
         },
       });
@@ -231,7 +241,10 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         this.isFetching.set(false);
-        this.showError(this.constants.errorDeletingProfile);
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
         console.error(this.constants.errorDeletingProfile, err);
       },
     });

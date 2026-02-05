@@ -81,7 +81,10 @@ export class FeedbackComponent implements OnInit {
         this.userFeedback = res;
       },
       error: (err) => {
-        this.showError(this.constants.errorFetchingFeedbacks);
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
         console.error(this.constants.errorFetchingFeedbacks, err);
       },
     });

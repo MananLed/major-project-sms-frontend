@@ -155,6 +155,10 @@ export class InvoiceComponent {
         this.invoiceData = res;
       },
       error: (err) => {
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
         console.error(this.constants.errorFetchingInvoices, err);
       },
     });
@@ -173,12 +177,15 @@ export class InvoiceComponent {
         this.fetchInvoices();
         this.visible = false;
         this.amount = null;
-        this.showSuccess('Invoice issued successfully.');
+        this.showSuccess(res.message);
         this.isFetching.set(false);
       },
       error: (err) => {
         this.isFetching.set(false);
-        this.showError(this.constants.errorAddingInvoice);
+        const customMessage = err.error?.message || 'An unexpected error occurred';
+        const customCode = err.error?.errorcode || 'UNKNOWN';
+        this.showError(customMessage);
+        console.log(`Error Code: ${customCode}`);
         console.error(this.constants.errorAddingInvoice, err);
       },
     });
@@ -203,6 +210,10 @@ export class InvoiceComponent {
         },
         error: (err) => {
           console.error(this.constants.errorSearchingInvoice, err);
+          const customMessage = err.error?.message || 'An unexpected error occurred';
+          const customCode = err.error?.errorcode || 'UNKNOWN';
+          this.showError(customMessage);
+          console.log(`Error Code: ${customCode}`);
           this.selectedMonth = '';
           this.selectedYear = '';
           this.isFetching.set(false);
@@ -233,6 +244,10 @@ export class InvoiceComponent {
         },
         error: (err) => {
           console.error(this.constants.errorSearchingInvoice, err);
+          const customMessage = err.error?.message || 'An unexpected error occurred';
+          const customCode = err.error?.errorcode || 'UNKNOWN';
+          this.showError(customMessage);
+          console.log(`Error Code: ${customCode}`);
           this.selectedMonth = '';
           this.selectedYear = '';
           this.isFetching.set(false);
