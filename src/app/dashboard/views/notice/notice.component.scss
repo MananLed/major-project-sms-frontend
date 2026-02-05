@@ -105,3 +105,18 @@ textarea {
     box-shadow: 0 0 0 1px #07598533;
   }
 }
+
+.notice-table{
+  th {
+    ::ng-deep .p-sortable-column-icon{
+      display: none;
+    }
+
+
+    ::ng-deep p-sortIcon::after {
+      content: 'unfold_more';
+      font-family: 'Material Icons';
+      
+    }
+  }
+}

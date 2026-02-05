@@ -13,7 +13,9 @@ import { ServiceRequest } from '../interface/request.model';
 })
 export class ApisService {
 
-  baseUrl = "http://localhost:8080";
+  // baseUrl = "http://upkeepz-ecs-alb-963171575.ap-south-1.elb.amazonaws.com";
+
+  baseUrl = "http://127.0.0.1:8000";
 
   constructor(private http:HttpClient) {
 
@@ -118,8 +120,8 @@ export class ApisService {
     return this.http.patch(`${this.baseUrl}/service/approve/${id}`, assignedTo);
   }
 
-  rescheduleRequest(id: any, slot: {slot: number}): Observable<any>{
-    return this.http.patch(`${this.baseUrl}/service/reschedule/${id}`, slot);
+  rescheduleRequest(id: any, slotid: {slotid: number}): Observable<any>{
+    return this.http.patch(`${this.baseUrl}/service/reschedule/${id}`, slotid);
   }
 
   completeRequest(id: any): Observable<any>{

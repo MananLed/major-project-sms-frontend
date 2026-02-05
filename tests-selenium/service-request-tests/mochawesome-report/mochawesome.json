@@ -1,0 +1,144 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 0,
+    "pending": 0,
+    "failures": 1,
+    "start": "2026-02-05T10:35:32.842Z",
+    "end": "2026-02-05T10:35:45.719Z",
+    "duration": 12877,
+    "testsRegistered": 1,
+    "passPercent": 0,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "b9b51c9d-7897-4bf2-9c24-bc5c4927aff6",
+      "title": "",
+      "fullFile": "C:\\Users\\mledwani\\OneDrive - WatchGuard Technologies Inc\\major-project-sms-frontend\\major-project-sms-frontend\\tests-selenium\\service-request-tests\\test\\test_service_request.js",
+      "file": "\\test\\test_service_request.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "78a78730-6fea-4aa4-8077-53da6e1e05e9",
+          "title": "Regression Test",
+          "fullFile": "C:\\Users\\mledwani\\OneDrive - WatchGuard Technologies Inc\\major-project-sms-frontend\\major-project-sms-frontend\\tests-selenium\\service-request-tests\\test\\test_service_request.js",
+          "file": "\\test\\test_service_request.js",
+          "beforeHooks": [
+            {
+              "title": "\"before each\" hook in \"Regression Test\"",
+              "fullTitle": "Regression Test \"before each\" hook in \"Regression Test\"",
+              "timedOut": null,
+              "duration": 1,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": null,
+              "context": null,
+              "code": "console.log(\"This is before each test - Regression Test Suite\");",
+              "err": {},
+              "uuid": "7638dec7-28ed-487d-898d-cf943ebd5ccf",
+              "parentUUID": null,
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "afterHooks": [
+            {
+              "title": "\"after each\" hook in \"Regression Test\"",
+              "fullTitle": "Regression Test \"after each\" hook in \"Regression Test\"",
+              "timedOut": null,
+              "duration": 0,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": null,
+              "context": null,
+              "code": "console.log(\"End of test\");",
+              "err": {},
+              "uuid": "2f1b2302-239c-41f6-8a49-722e4ec37dde",
+              "parentUUID": null,
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "tests": [
+            {
+              "title": "Tc001[5] - Book a request",
+              "fullTitle": "Regression Test Tc001[5] - Book a request",
+              "timedOut": null,
+              "duration": 12071,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "const edge = require(\"selenium-webdriver/edge\");\nconst options = new edge.Options();\noptions.addArguments(\"--start-maximized\");\nconst driver = await new Builder()\n  .forBrowser(Browser.EDGE)\n  .setEdgeOptions(options)\n  .build();\nlet tcData = await readData(\"tc004\");\nlet requestTcData = await readData(\"tc005\");\nlet xpaths = await requestTcData.data;\ntry {\n  await login(driver, tcData.data.username, tcData.data.password);\n  await waitAndClick(driver, By.xpath(xpaths.requestOptionXPath));\n  await waitAndClick(driver, By.xpath(xpaths.issueRequestButtonXPath));\n  await selectFromDropdown(driver, By.xpath(xpaths.selectServiceTypeXPath));\n  await selectFromDropdown(driver, By.xpath(xpaths.selectTimeSlotXPath));\n  await driver.wait(async () => true, 5000);\n  await waitAndClick(driver, By.xpath(xpaths.submitButtonXpath));\n  const bookingRow = await driver.wait(\n    until.elementLocated(\n      By.xpath(\"//tr[.//td[contains(text(),'Electrician')]]\"),\n    ),\n    15000,\n  );\n  await driver.wait(until.elementIsVisible(bookingRow), 15000);\n  const bookingShot = await driver.takeScreenshot();\n  addContext(this, {\n    title: \"Booking Request Added to Table\",\n    value: \"data:image/png;base64,\" + bookingShot,\n  });\n} finally {\n  await driver.quit();\n}",
+              "err": {
+                "message": "Error: ECONNREFUSED connect ECONNREFUSED 127.0.0.1:58924",
+                "estack": "Error: ECONNREFUSED connect ECONNREFUSED 127.0.0.1:58924\n    at ClientRequest.<anonymous> (C:\\Users\\mledwani\\OneDrive - WatchGuard Technologies Inc\\major-project-sms-frontend\\major-project-sms-frontend\\node_modules\\selenium-webdriver\\http\\index.js:293:15)\n    at ClientRequest.emit (node:events:508:28)\n    at emitErrorEvent (node:_http_client:108:11)\n    at Socket.socketErrorListener (node:_http_client:575:5)\n    at Socket.emit (node:events:508:28)\n    at emitErrorNT (node:internal/streams/destroy:170:8)\n    at emitErrorCloseNT (node:internal/streams/destroy:129:3)\n    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)",
+                "diff": null
+              },
+              "uuid": "6d220899-6d37-4040-956f-4cec83840583",
+              "parentUUID": null,
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [],
+          "failures": [
+            "6d220899-6d37-4040-956f-4cec83840583"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 12071,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": null
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 0
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "11.7.5"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.4"
+    },
+    "marge": {
+      "options": {
+        "charts": "true"
+      },
+      "version": "6.3.2"
+    }
+  }
+}

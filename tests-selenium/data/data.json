@@ -1,0 +1,91 @@
+[
+    {
+        "testName" : "global",
+        "data" : {
+            "url": "http://localhost:4200/"
+        }
+    },
+    {
+        "testName" : "tc001",
+        "data" : {
+            "username" : "jyotideepakadmin@blossom.com",
+            "password" : "Jyotideepak@123",
+            "expectedText" : "UpKeepz"
+        }
+    },
+    {
+        "testName" : "tc002",
+        "data" : {
+            "username" : "jdsf@sdlfj",
+            "password" : "dlfjks@dsljfkD12"
+        }
+    },
+    {
+        "testName" : "tc003",
+        "data" : {
+            "username" : "jyotideepakadmin@blossom.com",
+            "password" : "Jyotideepak@123",
+            "expectedText" : "UpKeepz"
+        }
+    },
+    {
+        "testName" : "tc004",
+        "data" : {
+            "username" : "rajeshsharma@gmail.com",
+            "password" : "Rajeshsharma@123",
+            "expectedText" : "UpKeepz"
+        }
+    },
+    {
+        "testName" : "tc005",
+        "data" : {
+            "requestOptionXPath" : "//a[@ng-reflect-router-link='/dashboard/request']",
+            "issueRequestButtonXPath" : "//span[@class='pi pi-plus p-button-icon ng-star-inserted']",
+            "selectServiceTypeXPath" : "//p-autocomplete[@placeholder='Select a Service']//input",
+            "selectTimeSlotXPath" : "//p-autocomplete[@placeholder='Select a Time Slot']//input",
+            "submitButtonXpath" : "//span[normalize-space()='Submit']"
+        }
+    },
+    {
+        "testName" : "tc006",
+        "data" : {
+            "feedbackOptionXPath" : "//a[@ng-reflect-router-link='/dashboard/feedback']",
+            "feedbackHeadingXPath" : "//h2[@class='feedback-title']",
+            "expectedText" : "Feedbacks"
+        }
+    },
+    {
+        "testName" : "tc007",
+        "data" : {
+            "invoiceOptionXPath" : "//a[@ng-reflect-router-link='/dashboard/invoice']",
+            "invoiceHeadingXPath" : "//h2[normalize-space()='Invoice Management']",
+            "expectedText" : "Invoice Management"
+        }
+    },
+    {
+        "testName" : "tc008",
+        "data" : {
+            "noticeOptionXPath" : "//a[@ng-reflect-router-link='/dashboard/notice']",
+            "noticeHeadingXPath" : "//h2[normalize-space()='Society Notices']",
+            "expectedText" : "Society Notices"
+        }
+    },
+    {
+        "testName" : "tc009",
+        "data" : {
+            "profileOptionXPath" : "//a[@ng-reflect-router-link='/dashboard/profile']",
+            "profileHeadingXPath" : "//h1[normalize-space()='My Profile']",
+            "profileFirstNameHeadingXPath" : "//label[@for='firstname']",
+            "profileMiddleNameHeadingXPath" : "//label[@for='middlename']",
+            "profileLastNameHeadingXPath" : "//label[@for='lastname']",
+            "profileEmailHeadingXPath" : "//label[@for='email']",
+            "profileMobileNumberHeadingXPath" : "//label[@for='mobile']",
+            "expectedTextHeading" : "My Profile",
+            "expectedTextFirstName" : "First name",
+            "expectedTextMiddleName" : "Middle name",
+            "expectedTextLastName" : "Last name",
+            "expectedTextMobileNumber" : "Mobile Number",
+            "expectedTextEmail" : "Email"
+        }
+    }
+]

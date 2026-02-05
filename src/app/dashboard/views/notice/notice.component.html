@@ -50,6 +50,7 @@
 
   <div class="card notice-table">
     <h3>All Notices</h3>
+    <br>
     <p-table
       *ngIf="societyNotices!.data!.length > 0; else noNotices"
       [value]="societyNotices!.data"
@@ -59,6 +60,7 @@
       [rowsPerPageOptions]="[5, 10, 20]"
       responsiveLayout="scroll"
       [tableStyle]="{ 'min-width': '60rem' }"
+      class="notice-table"
     >
       <ng-template #header>
         <tr>

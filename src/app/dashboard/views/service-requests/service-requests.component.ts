@@ -16,6 +16,7 @@ import { FloatLabel } from "primeng/floatlabel";
 import { RatingModule } from 'primeng/rating';
 import { Toast } from 'primeng/toast';
 import { Ripple } from 'primeng/ripple';
+import { InputTextModule } from 'primeng/inputtext';
 
 import { AuthService } from '../../../service/auth.service';
 import { ApisService } from '../../../service/apis.service';
@@ -37,7 +38,8 @@ import { Constants } from '../../../shared/constants';
     FloatLabel,
     RatingModule,
     Toast,
-    Ripple
+    Ripple,
+    InputTextModule
 ],
   templateUrl: './service-requests.component.html',
   styleUrl: './service-requests.component.scss',
@@ -223,7 +225,7 @@ export class ServiceRequestsComponent {
 
     this.api
       .rescheduleRequest(this.selectedReServiceID, {
-        slot: Number(this.selectedTimeSlotIndex) + 1,
+        slotid: Number(this.selectedTimeSlotIndex) + 1,
       })
       .subscribe({
         next: (res) => {

@@ -13,7 +13,10 @@ import { Message, MessageModule } from 'primeng/message';
 
 import { ApisService } from '../../../service/apis.service';
 import { AuthService } from '../../../service/auth.service';
-import { ProfileResponse, ProfileSuccessResponse } from '../../../interface/profile.model';
+import {
+  ProfileResponse,
+  ProfileSuccessResponse,
+} from '../../../interface/profile.model';
 import { Constants } from '../../../shared/constants';
 import { Toast } from 'primeng/toast';
 import { Ripple } from 'primeng/ripple';
@@ -33,14 +36,13 @@ import { MessageService } from 'primeng/api';
     Message,
     MessagesModule,
     Toast,
-    Ripple
+    Ripple,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
-  providers: [MessageService]
+  providers: [MessageService],
 })
 export class ProfileComponent implements OnInit {
-  
   userDetails?: ProfileResponse;
   @ViewChild('updateProfileForm') updateProfileForm?: NgForm;
   @ViewChild('changePasswordForm') changePasswordForm?: NgForm;
@@ -59,15 +61,16 @@ export class ProfileComponent implements OnInit {
   oldpassword: string = '';
   newpassword: string = '';
   confirmpassword: string = '';
-  
+
   readonly constants = Constants;
+  
 
   constructor(
     private route: ActivatedRoute,
     private api: ApisService,
     private routes: Router,
     private auth: AuthService,
-    private messageService: MessageService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -79,11 +82,19 @@ export class ProfileComponent implements OnInit {
   }
 
   showSuccess(message: string) {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: message,
+    });
   }
 
   showError(message: string) {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: message,
+    });
   }
 
   showDialog(): void {
@@ -127,12 +138,15 @@ export class ProfileComponent implements OnInit {
   updateProfile(): void {
     this.isFetching.set(true);
 
+    const normalize = (v: any): string =>
+    typeof v === 'string' ? v : '';
+
     if (
-      this.firstname === '' &&
-      this.middlename === '' &&
-      this.lastname === '' &&
-      this.mobile === '' &&
-      this.email === ''
+      normalize(this.firstname) === '' &&
+      normalize(this.middlename) === '' &&
+      normalize(this.lastname) === '' &&
+      normalize(this.mobile) === '' &&
+      normalize(this.email) === ''
     ) {
       this.isFetching.set(false);
       return;
@@ -140,22 +154,32 @@ export class ProfileComponent implements OnInit {
 
     this.api
       .updateProfile({
-        firstname: this.firstname,
-        middlename: this.middlename,
-        lastname: this.lastname,
-        email: this.email,
-        mobilenumber: this.mobile,
+        firstname: normalize(this.firstname),
+        middlename: normalize(this.middlename),
+        lastname: normalize(this.lastname),
+        email: normalize(this.email),
+        mobilenumber: normalize(this.mobile),
       })
       .subscribe({
         next: (res) => {
           this.fetchProfile();
           this.visible = false;
+          if (normalize(this.email) != '') {
+            this.firstname = '';
+            this.middlename = '';
+            this.lastname = '';
+            this.mobile = '';
+            this.email = '';
+            this.showSuccess('Profile updated successfully.');
+            this.auth.logoutUser();
+            this.routes.navigate(['/login']);
+          }
           this.firstname = '';
           this.middlename = '';
           this.lastname = '';
           this.mobile = '';
           this.email = '';
-          this.showSuccess('Profile updated successfully.')
+          this.showSuccess('Profile updated successfully.');
           this.isFetching.set(false);
         },
         error: (err) => {
@@ -189,7 +213,7 @@ export class ProfileComponent implements OnInit {
           this.oldpassword = '';
           this.newpassword = '';
           this.isFetching.set(false);
-          this.showSuccess('Password changed successfully.')
+          this.showSuccess('Password changed successfully.');
           this.auth.logoutUser();
           this.routes.navigate(['/login']);
         },
