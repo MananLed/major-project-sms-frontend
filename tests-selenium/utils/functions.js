@@ -2,7 +2,8 @@ var { By, until, Key } = require("selenium-webdriver");
 var fs = require("fs");
 
 var readData = async function (tcName) {
-    const content = fs.readFileSync("../data/data.json");
+    const filePath = path.join(__dirname, "../data/data.json");
+    const content = fs.readFileSync(filePath);
     const obj = JSON.parse(content);
 
     return obj.find(o => o.testName === tcName);
@@ -47,15 +48,14 @@ var waitAndClick = async function (driver, locator, timeout = 15000) {
 }
 
 var selectFromDropdown = async function (driver, dropdownLocator, timeout = 15000) {
-    const dropdown = await waitAndClick(driver, dropdownLocator, timeout);
+    const dropdown = await waitAndClick(driver, dropdownLocator);
 
-    await driver.wait(async () => true, 5000);
+    await driver.sleep(1000);
 
-    await dropdown.sendKeys(Key.ARROW_DOWN);
-    await dropdown.sendKeys(Key.ENTER);
+    await driver.switchTo().activeElement().sendKeys(Key.ARROW_DOWN);
+    await driver.sleep(2000);
+    await driver.switchTo().activeElement().sendKeys(Key.ENTER);
 }
-
-
 
 module.exports = {
     login,

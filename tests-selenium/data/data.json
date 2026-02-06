@@ -41,8 +41,8 @@
         "data" : {
             "requestOptionXPath" : "//a[@ng-reflect-router-link='/dashboard/request']",
             "issueRequestButtonXPath" : "//span[@class='pi pi-plus p-button-icon ng-star-inserted']",
-            "selectServiceTypeXPath" : "//p-autocomplete[@placeholder='Select a Service']//input",
-            "selectTimeSlotXPath" : "//p-autocomplete[@placeholder='Select a Time Slot']//input",
+            "selectServiceTypeCSSSelector" : "p-autocomplete[placeholder='Select a Service'] button[type='button']",
+            "selectTimeSlotCSSSelector" : "p-autocomplete[placeholder='Select a Time Slot'] button[type='button']",
             "submitButtonXpath" : "//span[normalize-space()='Submit']"
         }
     },
@@ -86,6 +86,76 @@
             "expectedTextLastName" : "Last name",
             "expectedTextMobileNumber" : "Mobile Number",
             "expectedTextEmail" : "Email"
+        }
+    },
+    {
+        "testName" : "tc010",
+        "data" : {
+            "noticeOptionXPath" : "//a[@ng-reflect-router-link='/dashboard/notice']",
+            "noticeHeadingXPath" : "//h2[normalize-space()='Society Notices']",
+            "addNoticeButtonXPath" : "//p-button[@class='add-btn ng-star-inserted']//button[@type='button']",
+            "expectedText" : "Society Notices"
+        }
+    },
+    {
+        "testName" : "tc011",
+        "data" : {
+            "invoiceOptionXPath" : "//a[@ng-reflect-router-link='/dashboard/invoice']",
+            "invoiceHeadingXPath" : "//h2[normalize-space()='Invoice Management']",
+            "addInvoiceButtonXPath" : "//span[@class='pi pi-plus p-button-icon ng-star-inserted']",
+            "expectedText" : "Invoice Management"
+        }
+    },
+    {
+        "testName" : "tc012",
+        "data" : {
+            "requestOptionXPath" : "//a[@ng-reflect-router-link='/dashboard/request']",
+            "totalRequestTextXPath" : "//h3[normalize-space()='Total Requests']",
+            "pendingRequestTextXPath" : "//h3[normalize-space()='Pending Requests']",
+            "approvedRequestTextXPath" : "//h3[normalize-space()='Approved Requests']",
+            "completedRequestTextXPath" : "//h3[normalize-space()='Completed Requests']",
+            "filterRequestsTextXPath" : "//b[normalize-space()='Filter Requests']",
+            "issueRequestButtonXPath" : "//span[@class='pi pi-plus p-button-icon ng-star-inserted']",
+            "searchRequestButtonXPath" : "//span[@class='pi pi-search p-button-icon ng-star-inserted']",
+            "expectedTotalRequestText" : "Total Requests",
+            "expectedPendingRequestText" : "Pending Requests",
+            "expectedApprovedRequestText" : "Approved Requests",
+            "expectedCompletedRequestText" : "Completed Requests",
+            "expectedFilterRequestsText" : "Filter Requests"
+        }
+    },
+    {
+        "testName" : "tc013",
+        "data" : {
+            "requestOptionXPath" : "//a[@ng-reflect-router-link='/dashboard/request']",
+            "totalRequestTextXPath" : "//h3[normalize-space()='Total Requests']",
+            "pendingRequestTextXPath" : "//h3[normalize-space()='Pending Requests']",
+            "approvedRequestTextXPath" : "//h3[normalize-space()='Approved Requests']",
+            "completedRequestTextXPath" : "//h3[normalize-space()='Completed Requests']",
+            "filterRequestsTextXPath" : "//b[normalize-space()='Filter Requests']",
+            "searchRequestButtonXPath" : "//span[@class='pi pi-search p-button-icon ng-star-inserted']",
+            "expectedTotalRequestText" : "Total Requests",
+            "expectedPendingRequestText" : "Pending Requests",
+            "expectedApprovedRequestText" : "Approved Requests",
+            "expectedCompletedRequestText" : "Completed Requests",
+            "expectedFilterRequestsText" : "Filter Requests"
+        }
+    },
+    {
+        "testName" : "tc014",
+        "data" : {
+            "requestOptionXPath" : "//a[@ng-reflect-router-link='/dashboard/request']",
+            "issueRequestButtonXPath" : "//span[@class='pi pi-plus p-button-icon ng-star-inserted']",
+            "selectServiceTypeCSSSelector" : "p-autocomplete[placeholder='Select a Service'] button[type='button']",
+            "selectTimeSlotCSSSelector" : "p-autocomplete[placeholder='Select a Time Slot'] button[type='button']",
+            "submitButtonXpath" : "//span[normalize-space()='Submit']",
+            "logoutButtonXPath" : "//button[@class='logout']",
+            "approveButtonXPath" : "//p-button[@ptooltip='Approve Request']//button[@type='button']",
+            "assignedToInputXPath" : "//input[@id='requestapprove']",
+            "assignedToApproveButtonXPath" : "//span[normalize-space()='Approve']",
+            "completeRequestButtonXPath" : "//p-button[@ptooltip='Mark as Complete']//button[@type='button']",
+            "feedbackButtonXPath" : "//p-button[@ptooltip='Give Feedback']//button[@type='button']",
+            "assignedToInput" : "Raju Electrician"
         }
     }
 ]
