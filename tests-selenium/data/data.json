@@ -8,8 +8,8 @@
     {
         "testName" : "tc001",
         "data" : {
-            "username" : "jyotideepakadmin@blossom.com",
-            "password" : "Jyotideepak@123",
+            "username" : "",
+            "password" : "",
             "expectedText" : "UpKeepz"
         }
     },
@@ -23,16 +23,16 @@
     {
         "testName" : "tc003",
         "data" : {
-            "username" : "jyotideepakadmin@blossom.com",
-            "password" : "Jyotideepak@123",
+            "username" : "",
+            "password" : "",
             "expectedText" : "UpKeepz"
         }
     },
     {
         "testName" : "tc004",
         "data" : {
-            "username" : "rajeshsharma@gmail.com",
-            "password" : "Rajeshsharma@123",
+            "username" : "",
+            "password" : "",
             "expectedText" : "UpKeepz"
         }
     },
