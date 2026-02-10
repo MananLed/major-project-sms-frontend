@@ -75,6 +75,8 @@
     .feedback-body {
       margin-top: 1rem;
       padding: 0.5rem 0;
+      max-height: 70px;
+      overflow-y: auto;
 
       .feedback-content {
         font-size: 0.95rem;

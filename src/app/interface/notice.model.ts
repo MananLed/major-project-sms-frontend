@@ -13,7 +13,7 @@ export interface NoticeData{
 export interface NoticeSuccessResponse {
   status: 'Success';
   message: string;
-  data: Notice[];
+  data: NoticeData[];
 }
 
 export interface ErrorResponse {
