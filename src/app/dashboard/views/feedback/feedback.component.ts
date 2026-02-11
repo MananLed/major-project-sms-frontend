@@ -68,7 +68,6 @@ export class FeedbackComponent implements OnInit {
 
   ngOnInit(): void {
     this.userFeedback = this.route.snapshot.data['userFeedback'];
-    console.log(this.userFeedback);
     this.userRole = this.auth.getRole();
     this.isAdmin = this.auth.isAdmin();
     this.isOfficer = this.auth.isOfficer();
@@ -84,8 +83,6 @@ export class FeedbackComponent implements OnInit {
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
-        console.error(this.constants.errorFetchingFeedbacks, err);
       },
     });
   }

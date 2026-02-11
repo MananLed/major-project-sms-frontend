@@ -93,7 +93,6 @@ export class LoginSignupComponent {
           const customMessage = err.error?.message || 'An unexpected error occurred';
           const customCode = err.error?.errorcode || 'UNKNOWN';
           this.showErrorr(customMessage);
-          console.log(`Error Code: ${customCode}`);
 
           setTimeout(() => {
             this.showError = false;
@@ -132,7 +131,6 @@ export class LoginSignupComponent {
           const customMessage = err.error?.message || 'An unexpected error occurred';
           const customCode = err.error?.errorcode || 'UNKNOWN';
           this.showErrorr(customMessage);
-          console.log(`Error Code: ${customCode}`);
 
           setTimeout(() => {
             this.showError = false;

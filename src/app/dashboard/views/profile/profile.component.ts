@@ -74,7 +74,6 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     const userData = this.route.snapshot.data['userData'];
-    console.log(this.userDetails);
     if (userData && userData.status === 'Success') {
       this.userDetails = userData as ProfileSuccessResponse;
     }
@@ -129,11 +128,9 @@ export class ProfileComponent implements OnInit {
         this.userDetails = res;
       },
       error: (err) => {
-        console.error(this.constants.errorProfileFetch, err);
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
       },
     });
   }
@@ -187,8 +184,6 @@ export class ProfileComponent implements OnInit {
           const customMessage = err.error?.message || 'An unexpected error occurred';
           const customCode = err.error?.errorcode || 'UNKNOWN';
           this.showError(customMessage);
-          console.log(`Error Code: ${customCode}`);
-          console.error(this.constants.errorProfileUpdate, err);
         },
       });
   }
@@ -225,8 +220,6 @@ export class ProfileComponent implements OnInit {
           const customMessage = err.error?.message || 'An unexpected error occurred';
           const customCode = err.error?.errorcode || 'UNKNOWN';
           this.showError(customMessage);
-          console.log(`Error Code: ${customCode}`);
-          console.error(this.constants.errorPasswordUpdate, err);
         },
       });
   }
@@ -244,8 +237,6 @@ export class ProfileComponent implements OnInit {
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
-        console.error(this.constants.errorDeletingProfile, err);
       },
     });
   }

@@ -121,8 +121,6 @@ export class InvoiceComponent {
     this.isOfficer = this.auth.isOfficer();
     this.isResident = this.auth.isResident();
 
-    console.log(this.invoiceData);
-
     const yearsSet = new Set<string>();
     const monthsSet = new Set<string>();
 
@@ -158,8 +156,6 @@ export class InvoiceComponent {
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
-        console.error(this.constants.errorFetchingInvoices, err);
       },
     });
   }
@@ -185,8 +181,6 @@ export class InvoiceComponent {
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
-        console.error(this.constants.errorAddingInvoice, err);
       },
     });
   }
@@ -209,11 +203,9 @@ export class InvoiceComponent {
           this.isFetching.set(false);
         },
         error: (err) => {
-          console.error(this.constants.errorSearchingInvoice, err);
           const customMessage = err.error?.message || 'An unexpected error occurred';
           const customCode = err.error?.errorcode || 'UNKNOWN';
           this.showError(customMessage);
-          console.log(`Error Code: ${customCode}`);
           this.selectedMonth = '';
           this.selectedYear = '';
           this.isFetching.set(false);
@@ -226,9 +218,6 @@ export class InvoiceComponent {
       this.isFetching.set(true);
       this.api.searchInvoice(this.selectedMonth, this.selectedYear).subscribe({
         next: (res) => {
-          console.log(res);
-          console.log(this.selectedMonth);
-          console.log(this.selectedYear);
           if (res && res.data) {
             if (!Array.isArray(res.data)) {
               this.invoiceData = { ...res, data: [res.data] };
@@ -243,11 +232,9 @@ export class InvoiceComponent {
           this.isFetching.set(false);
         },
         error: (err) => {
-          console.error(this.constants.errorSearchingInvoice, err);
           const customMessage = err.error?.message || 'An unexpected error occurred';
           const customCode = err.error?.errorcode || 'UNKNOWN';
           this.showError(customMessage);
-          console.log(`Error Code: ${customCode}`);
           this.selectedMonth = '';
           this.selectedYear = '';
           this.isFetching.set(false);

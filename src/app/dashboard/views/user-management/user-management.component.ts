@@ -72,21 +72,11 @@ export class UserManagementComponent implements OnInit {
     if (societyData.residentDetails.status === 'Success') {
       this.residentDetails = societyData.residentDetails;
       this.noOfResidents = this.residentDetails.data.length;
-    } else {
-      console.error(
-        this.constants.errorResidentDetailFetch,
-        societyData.residentDetails.message
-      );
-    }
+    } 
 
     if (societyData.officerDetails.status === 'Success') {
       this.officerDetails = societyData.officerDetails;
       this.noOfOfficers = this.officerDetails.data.length;
-    } else {
-      console.error(
-        this.constants.errorOfficerDetailFetch,
-        societyData.officerDetails.message
-      );
     }
   }
 
@@ -120,11 +110,9 @@ export class UserManagementComponent implements OnInit {
         this.noOfOfficers = res.data.length;
       },
       error: (err) => {
-        console.error(this.constants.errorOfficerDetailFetch, err);
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
       },
     });
   }
@@ -136,11 +124,9 @@ export class UserManagementComponent implements OnInit {
         this.noOfResidents = res.data.length;
       },
       error: (err) => {
-        console.error(this.constants.errorResidentDetailFetch, err);
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
       },
     });
   }
@@ -162,8 +148,6 @@ export class UserManagementComponent implements OnInit {
           const customMessage = err.error?.message || 'An unexpected error occurred';
           const customCode = err.error?.errorcode || 'UNKNOWN';
           this.showError(customMessage);
-          console.log(`Error Code: ${customCode}`);
-          console.error(this.constants.errorAddOfficer, err);
         }
       });
     }
@@ -171,7 +155,6 @@ export class UserManagementComponent implements OnInit {
 
   deleteResident(residentID: string): void {
     this.isFetching.set(true);
-    console.log(residentID);
     this.api.deleteResident(residentID).subscribe({
       next: (res) => {
         this.fetchResidents();
@@ -183,8 +166,6 @@ export class UserManagementComponent implements OnInit {
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
-        console.error(this.constants.errorDeleteResident, err);
       },
     });
   }
@@ -202,8 +183,6 @@ export class UserManagementComponent implements OnInit {
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
-        console.error(this.constants.errorDeleteOfficer, err);
       },
     });
   }

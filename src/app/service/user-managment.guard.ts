@@ -1,20 +1,24 @@
-import { Injectable } from "@angular/core";
-import { CanActivate, Router, UrlTree } from "@angular/router";
-import { AuthService } from "./auth.service";
+import { Injectable } from '@angular/core';
+import { CanActivate, Router, UrlTree } from '@angular/router';
+import { AuthService } from './auth.service';
 
 @Injectable({
-    providedIn: 'root',  
+  providedIn: 'root',
 })
 export class UserManagementGuard implements CanActivate {
-    constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
-    canActivate(): boolean | UrlTree{
-        console.log('visited');
-        if (this.auth.isAdmin()){
-            return true;
-        }else{
-            console.log('Close to link');
-            return this.router.parseUrl('/access-denied');
-        }
+  canActivate(): boolean {
+    if (this.authService.isLoggedIn() && this.authService.isAdmin())
+      return true;
+    else if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/access-denied'], { replaceUrl: true });
+    } else {
+      this.router.navigate(['/login'], { replaceUrl: true });
     }
+    return false;
+  }
 }

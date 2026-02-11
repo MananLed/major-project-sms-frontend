@@ -91,7 +91,6 @@ export class NoticeComponent implements OnInit {
 
   ngOnInit(): void {
     this.societyNotices = this.route.snapshot.data['societyNotices'];
-    console.log(this.societyNotices);
     this.userRole = this.auth.getRole();
     this.isAdmin = this.auth.isAdmin();
     this.isOfficer = this.auth.isOfficer();
@@ -140,11 +139,9 @@ export class NoticeComponent implements OnInit {
         this.societyNotices = res;
       },
       error: (err) => {
-        console.error(this.constants.errorFetchingNotices, err);
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
       },
     });
   }
@@ -167,11 +164,9 @@ export class NoticeComponent implements OnInit {
           this.isFetching.set(false);
         },
         error: (err) => {
-          console.error(this.constants.errorSearchingNotices, err);
           const customMessage = err.error?.message || 'An unexpected error occurred';
           const customCode = err.error?.errorcode || 'UNKNOWN';
           this.showError(customMessage);
-          console.log(`Error Code: ${customCode}`);
           this.selectedMonth = '';
           this.selectedYear = '';
           this.isFetching.set(false);
@@ -184,20 +179,15 @@ export class NoticeComponent implements OnInit {
       this.isFetching.set(true);
       this.api.searchNotice(this.selectedMonth, this.selectedYear).subscribe({
         next: (res) => {
-          console.log(res);
-          console.log(this.selectedMonth);
-          console.log(this.selectedYear);
           this.societyNotices = res;
           this.selectedMonth = '';
           this.selectedYear = '';
           this.isFetching.set(false);
         },
         error: (err) => {
-          console.error(this.constants.errorFetchingNotices, err);
           const customMessage = err.error?.message || 'An unexpected error occurred';
           const customCode = err.error?.errorcode || 'UNKNOWN';
           this.showError(customMessage);
-          console.log(`Error Code: ${customCode}`);
           this.selectedMonth = '';
           this.selectedYear = '';
           this.isFetching.set(false);
@@ -228,8 +218,6 @@ export class NoticeComponent implements OnInit {
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
-        console.error(this.constants.errorAddingNotices, err);
       },
     });
   }

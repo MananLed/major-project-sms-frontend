@@ -49,11 +49,6 @@ export class DashboardComponent implements OnInit {
       this.approvedRequestCount = this.requestCount.data.Approved?.length ?? 0;
     }
 
-    console.log('Resident Count: ', this.residentCount);
-    console.log('Officer Count: ', this.officerCount);
-    console.log('Request Count:', this.requestCount);
-    console.log(this.pendingRequestCount);
-    console.log(this.approvedRequestCount);
 
     if (this.auth.isLoggedIn()) {
       this.userRole = this.auth.getRole();

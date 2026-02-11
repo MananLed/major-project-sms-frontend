@@ -104,6 +104,13 @@ export const routes: Routes = [
         (c) => c.AccessDeniedComponent
       ),
   },
-  {path: 'access-denied', redirectTo: 'access-denied', pathMatch: 'full'},
-  { path: '**', redirectTo: 'login', pathMatch: 'full' },
+  {
+    path: 'error',
+    loadComponent: () =>
+      import('./dashboard/views/error/error.component').then(
+        (c) => c.ErrorComponent
+      ),
+  },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'error', pathMatch: 'full' },
 ];

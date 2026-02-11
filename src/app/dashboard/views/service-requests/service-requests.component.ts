@@ -114,9 +114,6 @@ export class ServiceRequestsComponent {
   ngOnInit(): void {
     const requestData = this.route.snapshot.data['requestData'];
 
-    console.log(requestData);
-
-    console.log(requestData);
     this.pendingRequestCount =
       requestData.data.Pending === null ? 0 : requestData.data.Pending.length;
     this.approvedRequestCount =
@@ -125,10 +122,7 @@ export class ServiceRequestsComponent {
       this.totalRequestCount =
         this.pendingRequestCount + this.approvedRequestCount + this.completedRequestCount;
 
-    console.log(this.pendingRequestCount);
-    console.log(this.approvedRequestCount);
-    console.log(this.completedRequestCount);
-    console.log(this.totalRequestCount);
+
 
     this.pendingRequestData = requestData.data.Pending || [];
     this.approvedRequestData = requestData.data.Approved || [];
@@ -140,11 +134,6 @@ export class ServiceRequestsComponent {
     this.allRequestData = this.allRequestData.concat(
       this.completedRequestData
     );
-
-    console.log(this.pendingRequestData);
-    console.log(this.approvedRequestData);
-    console.log(this.completedRequestData);
-    console.log(this.allRequestData);
 
     this.filteredService = this.allServices;
     this.filteredStatus = this.allStatuses;
@@ -178,12 +167,9 @@ export class ServiceRequestsComponent {
 
   onTimeSlotSelect(event: any): void {
     const selectedItem = event.value;
-    console.log(this.fetchedTimeSlots);
     this.selectedTimeSlotIndex = this.fetchedTimeSlots.data.findIndex(
       (slot: any) => slot.Label == selectedItem.label
     );
-    console.log(this.selectedTimeSlotIndex);
-    console.log(selectedItem);
   }
 
   showAddRequestDialog(): void {
@@ -201,8 +187,6 @@ export class ServiceRequestsComponent {
     this.displayRescheduleRequestDialog = true;
     this.selectedReServiceType = typeOfService;
     this.selectedReServiceID = serviceID;
-    console.log(this.selectedReServiceType);
-    console.log(this.selectedReServiceID);
   }
 
   hideRescheduleRequestDialog(): void {
@@ -241,8 +225,6 @@ export class ServiceRequestsComponent {
           const customMessage = err.error?.message || 'An unexpected error occurred';
           const customCode = err.error?.errorcode || 'UNKNOWN';
           this.showError(customMessage);
-          console.log(`Error Code: ${customCode}`);
-          console.error(this.constants.errorReschedulingRequests, err);
         },
       });
   }
@@ -251,7 +233,6 @@ export class ServiceRequestsComponent {
     this.api.getAllRequests().subscribe({
       next: (res) => {
         const requestData = res;
-        console.log(requestData);
         this.pendingRequestCount =
           requestData.data.Pending === null
             ? 0
@@ -264,10 +245,6 @@ export class ServiceRequestsComponent {
         this.totalRequestCount =
           this.pendingRequestCount + this.approvedRequestCount + this.completedRequestCount;
 
-        console.log(this.pendingRequestCount);
-        console.log(this.approvedRequestCount);
-        console.log(this.totalRequestCount);
-
         this.pendingRequestData = requestData.data.Pending || [];
         this.approvedRequestData = requestData.data.Approved || [];
         this.completedRequestData = requestData.data.Completed || [];
@@ -276,16 +253,11 @@ export class ServiceRequestsComponent {
         );
         this.allRequestData = this.allRequestData.concat(this.completedRequestData);
 
-        console.log(this.pendingRequestData);
-        console.log(this.approvedRequestData);
-        console.log(this.allRequestData);
       },
       error: (err) => {
-        console.error(this.constants.errorFetchingRequestOfResident, err);
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
       },
     });
   }
@@ -306,8 +278,6 @@ export class ServiceRequestsComponent {
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
-        console.error(this.constants.errorFetchingAllRequests, err);
       },
     });
   }
@@ -326,9 +296,6 @@ export class ServiceRequestsComponent {
   }
 
   issueFeedback(form: NgForm): void{
-    console.log(this.rating);
-    console.log(this.content);
-    console.log(this.requestID);
     this.isFetching.set(true);
     this.api.postFeedbackOnRequest({rating: this.rating, content: this.content, requestid: String(this.requestID)}).subscribe({
       next: (res) => {
@@ -343,8 +310,6 @@ export class ServiceRequestsComponent {
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
-        console.error(this.constants.errorAddingFeedbacks, err);
       }
     })
   }
@@ -363,8 +328,6 @@ export class ServiceRequestsComponent {
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
-        console.error(this.constants.errorCompletingRequest, err);
       }
     })
   }
@@ -382,8 +345,6 @@ export class ServiceRequestsComponent {
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
-        console.error(this.constants.errorDeleteRequest, err);
       },
     });
   }
@@ -399,7 +360,6 @@ export class ServiceRequestsComponent {
     this.api.getAllRequestsOfResident().subscribe({
       next: (res) => {
         const requestData = res;
-        console.log(requestData);
         this.pendingRequestCount =
           requestData.data.Pending === null
             ? 0
@@ -412,9 +372,6 @@ export class ServiceRequestsComponent {
         this.totalRequestCount =
           this.pendingRequestCount + this.approvedRequestCount + this.completedRequestCount;
 
-        console.log(this.pendingRequestCount);
-        console.log(this.approvedRequestCount);
-        console.log(this.totalRequestCount);
 
         this.pendingRequestData = requestData.data.Pending || [];
         this.approvedRequestData = requestData.data.Approved || [];
@@ -427,16 +384,11 @@ export class ServiceRequestsComponent {
           this.completedRequestData
         );
 
-        console.log(this.pendingRequestData);
-        console.log(this.approvedRequestData);
-        console.log(this.allRequestData);
       },
       error: (err) => {
-        console.error(this.constants.errorFetchingRequestOfResident, err);
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
       },
     });
   }
@@ -454,7 +406,6 @@ export class ServiceRequestsComponent {
       })
       .subscribe({
         next: (res) => {
-          console.log(res);
           this.fetchRequestsOfResident();
           this.showSuccess(res.message)
           this.displayAddRequestDialog = false;
@@ -468,8 +419,6 @@ export class ServiceRequestsComponent {
           const customMessage = err.error?.message || 'An unexpected error occurred';
           const customCode = err.error?.errorcode || 'UNKNOWN';
           this.showError(customMessage);
-          console.log(`Error Code: ${customCode}`);
-          console.error(this.constants.errorAddingRequest, err);
         },
       });
   }
@@ -481,7 +430,6 @@ export class ServiceRequestsComponent {
     this.isFetching.set(true);
     this.api.getAvailableTimeSlots(serviceType.toLowerCase()).subscribe({
       next: (res) => {
-        console.log(res);
         this.fetchedTimeSlots = res;
         if (res && res.data) {
           this.filteredTimeSlots = res.data.map((slot: any) => ({
@@ -493,11 +441,9 @@ export class ServiceRequestsComponent {
       },
       error: (err) => {
         this.isFetching.set(false);
-        console.error(this.constants.errorFetchingTimeSlots, err);
         const customMessage = err.error?.message || 'An unexpected error occurred';
         const customCode = err.error?.errorcode || 'UNKNOWN';
         this.showError(customMessage);
-        console.log(`Error Code: ${customCode}`);
       },
     });
   }
@@ -530,7 +476,6 @@ export class ServiceRequestsComponent {
         .searchRequests(this.selectedService.toLowerCase(), this.selectedStatus.toLowerCase())
         .subscribe({
           next: (res) => {
-            console.log(res);
             if (res && res.data) {
               this.allRequestData = res.data;
             } else {
@@ -541,11 +486,9 @@ export class ServiceRequestsComponent {
             this.isFetching.set(false);
           },
           error: (err) => {
-            console.log(this.constants.errorSearchingRequests, err);
             const customMessage = err.error?.message || 'An unexpected error occurred';
             const customCode = err.error?.errorcode || 'UNKNOWN';
             this.showError(customMessage);
-            console.log(`Error Code: ${customCode}`);
             this.selectedService = '';
             this.selectedStatus = '';
             this.isFetching.set(false);
