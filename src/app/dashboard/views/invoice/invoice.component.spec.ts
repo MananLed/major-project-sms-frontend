@@ -62,7 +62,6 @@ describe('InvoiceComponent', () => {
     fixture = TestBed.createComponent(InvoiceComponent);
     component = fixture.componentInstance;
 
-    // 🔑 Spy on component-level MessageService
     spyOn((component as any).messageService, 'add');
 
     fixture.detectChanges();

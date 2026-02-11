@@ -64,7 +64,6 @@ describe('ServiceRequestsComponent', () => {
     fixture = TestBed.createComponent(ServiceRequestsComponent);
     component = fixture.componentInstance;
 
-    // 🔥 THIS is the important line
     componentMessageService = fixture.debugElement.injector.get(MessageService);
 
     fixture.detectChanges();

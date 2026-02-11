@@ -62,7 +62,6 @@ describe('FeedbackComponent', () => {
     fixture = TestBed.createComponent(FeedbackComponent);
     component = fixture.componentInstance;
 
-    // 🔑 IMPORTANT: spy on the ACTUAL injected MessageService
     spyOn((component as any).messageService, 'add');
 
     fixture.detectChanges();

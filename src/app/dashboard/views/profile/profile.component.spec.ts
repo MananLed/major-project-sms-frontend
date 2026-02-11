@@ -56,7 +56,6 @@ describe('ProfileComponent', () => {
         { provide: Router, useValue: router }
       ]
     })
-      // 🔥 THIS IS THE FIX
       .overrideComponent(ProfileComponent, {
         add: {
           imports: [CommonModule]

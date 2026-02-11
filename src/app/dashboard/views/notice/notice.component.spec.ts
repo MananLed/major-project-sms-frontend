@@ -62,7 +62,6 @@ describe('NoticeComponent', () => {
     fixture = TestBed.createComponent(NoticeComponent);
     component = fixture.componentInstance;
 
-    // 🔑 VERY IMPORTANT: spy on component-level MessageService
     spyOn((component as any).messageService, 'add');
 
     fixture.detectChanges();
