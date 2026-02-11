@@ -107,4 +107,72 @@ describe("Regression Test", function () {
       await driver.quit();
     }
   });
+
+  it("Tc003[15] - Admin issues a invoice", async function () {
+    const edge = require("selenium-webdriver/edge");
+    const options = new edge.Options();
+    options.addArguments("--start-maximized");
+
+    const driver = await new Builder()
+      .forBrowser(Browser.EDGE)
+      .setEdgeOptions(options)
+      .build();
+
+    let tcData = await readData("tc001");
+
+    let invoiceTcData = await readData("tc015");
+    let data = await invoiceTcData.data;
+
+    try {
+      await login(driver, tcData.data.username, tcData.data.password);
+      
+      await driver.wait(until.urlContains("dashboard"), 15000);
+
+      await waitAndClick(driver, By.xpath(data.invoiceOptionXPath));
+
+      await driver.wait(until.urlContains("invoice"), 15000);
+
+      await driver.wait(
+        until.elementLocated(By.xpath(data.invoiceHeadingXPath)),
+        15000,
+      );
+
+      await driver.wait(
+        until.elementLocated(By.xpath(data.addInvoiceButtonXPath)),
+        15000,
+      );
+
+      await waitAndClick(driver, By.xpath(data.addInvoiceButtonXPath))
+
+      const issueInvoiceDialogShot = await driver.takeScreenshot();
+      
+      addContext(this, {
+        title: "Issue invoice dialog shown successfully",
+        value: "data:image/png;base64," + issueInvoiceDialogShot,
+      });
+
+      const amountInput = await driver.wait(
+        until.elementLocated(By.xpath(data.amountInputXPath)),
+        15000
+      );
+
+      await driver.wait(until.elementIsVisible(amountInput), 15000);
+
+      await amountInput.sendKeys(data.amountInput);
+
+      await waitAndClick(driver, By.xpath(data.issueInvoiceButtonXPath));
+
+      await driver.sleep(3000);
+
+      const issuedInvoiceSuccess = await driver.takeScreenshot();
+      
+      addContext(this, {
+        title: "Invoice issued successfully",
+        value: "data:image/png;base64," + issuedInvoiceSuccess,
+      });
+
+    } finally {
+      await driver.quit();
+    }
+  });
 });

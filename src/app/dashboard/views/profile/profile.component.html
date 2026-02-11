@@ -2,17 +2,20 @@
   <div class="buttons">
     <p-button
       pTooltip="Edit Profile"
+      tooltipPosition="bottom"
       icon="pi pi-pen-to-square"
       (onClick)="showDialog()"
     />
     <p-button
       pTooltip="Change Password"
+      tooltipPosition="bottom"
       severity="danger"
       icon="pi pi-lock"
       (onClick)="showDialogChangePassword()"
     />
     <p-button
       pTooltip="Delete Profile"
+      tooltipPosition="left"
       severity="danger"
       icon="pi pi-trash"
       (onClick)="showDialogDeleteProfile()"

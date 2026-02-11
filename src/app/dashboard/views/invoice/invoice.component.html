@@ -5,7 +5,9 @@
       @if (!isResident) {
         <p-button
           icon="pi pi-plus"
-          class="add-btn"
+          pTooltip="Add Invoice"
+          tooltipPosition="left"
+          class="add-btn" 
           (onClick)="showDialog()"
         ></p-button>
       }

@@ -157,5 +157,27 @@
             "feedbackButtonXPath" : "//p-button[@ptooltip='Give Feedback']//button[@type='button']",
             "assignedToInput" : "Raju Electrician"
         }
+    },
+    {
+        "testName" : "tc015",
+        "data" : {
+            "addInvoiceButtonXPath" :"//span[@class='pi pi-plus p-button-icon ng-star-inserted']",
+            "invoiceOptionXPath" : "//a[@ng-reflect-router-link='/dashboard/invoice']",
+            "amountInputXPath" : "//input[@id='amount']",
+            "issueInvoiceButtonXPath" : "//span[normalize-space()='Issue']",
+            "invoiceHeadingXPath" : "//h2[normalize-space()='Invoice Management']",
+            "amountInput" : 220
+        }
+    },
+    {
+        "testName" : "tc016",
+        "data" : {
+            "addNoticeButtonXPath" :"//p-button[@class='add-btn ng-star-inserted']//button[@type='button']",
+            "noticeOptionXPath" : "//a[@ng-reflect-router-link='/dashboard/notice']",
+            "noticeInputXPath" : "//textarea[@placeholder='Max 500 characters...']",
+            "issueNoticeButtonXPath" : "//span[normalize-space()='Issue']",
+            "noticeHeadingXPath" : "//h2[normalize-space()='Society Notices']",
+            "noticeInput" : "Fire training at 1pm"
+        }
     }
 ]

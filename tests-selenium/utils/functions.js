@@ -2,8 +2,7 @@ var { By, until, Key } = require("selenium-webdriver");
 var fs = require("fs");
 
 var readData = async function (tcName) {
-    const filePath = path.join(__dirname, "../data/data.json");
-    const content = fs.readFileSync(filePath);
+    const content = fs.readFileSync("../data/data.json");
     const obj = JSON.parse(content);
 
     return obj.find(o => o.testName === tcName);
