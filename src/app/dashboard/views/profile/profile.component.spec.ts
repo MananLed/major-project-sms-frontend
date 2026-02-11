@@ -106,6 +106,129 @@ describe('ProfileComponent', () => {
     );
   });
 
+  it('should manage update dialog visibility and reset form', () => {
+    // Mock the ViewChild form
+    component.updateProfileForm = { resetForm: jasmine.createSpy('resetForm') } as any;
+
+    component.showDialog();
+    expect(component.visible).toBeTrue();
+
+    component.hideDialog();
+    expect(component.visible).toBeFalse();
+    expect(component.updateProfileForm?.resetForm).toHaveBeenCalled();
+  });
+
+  it('should manage change password dialog visibility and reset form', () => {
+    // Mock the ViewChild form
+    component.changePasswordForm = { resetForm: jasmine.createSpy('resetForm') } as any;
+
+    component.showDialogChangePassword();
+    expect(component.visibleChangePassword).toBeTrue();
+
+    component.hideDialogChangePassword();
+    expect(component.visibleChangePassword).toBeFalse();
+    expect(component.changePasswordForm?.resetForm).toHaveBeenCalled();
+  });
+
+  it('should manage delete profile dialog visibility', () => {
+    component.showDialogDeleteProfile();
+    expect(component.visibleDeleteProfile).toBeTrue();
+
+    component.hideDialogDeleteProfile();
+    expect(component.visibleDeleteProfile).toBeFalse();
+  });
+
+  it('should logout and navigate to login when Email is updated', () => {
+    component.email = 'newemail@test.com'; // Set email to trigger the specific branch
+    component.firstname = 'John';
+
+    apiService.updateProfile.and.returnValue(
+      of({ status: 'Success', message: 'Updated' } as any)
+    );
+    apiService.profile.and.returnValue(of(mockProfileResponse));
+
+    component.updateProfile();
+
+    expect(apiService.updateProfile).toHaveBeenCalled();
+    // Verify specific branch logic
+    expect(authService.logoutUser).toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalledWith(['/login']);
+  });
+
+  it('should just reset fields and stay on page when Email is NOT updated', () => {
+    component.email = ''; // Empty email means other fields are being updated
+    component.firstname = 'John';
+
+    apiService.updateProfile.and.returnValue(
+      of({ status: 'Success', message: 'Updated' } as any)
+    );
+    apiService.profile.and.returnValue(of(mockProfileResponse));
+
+    component.updateProfile();
+
+    expect(apiService.updateProfile).toHaveBeenCalled();
+    // Verify it did NOT logout
+    expect(authService.logoutUser).not.toHaveBeenCalled();
+    // Verify fields were reset
+    expect(component.firstname).toBe('');
+    expect(component.isFetching()).toBeFalse();
+  });
+
+  it('should handle error when updating profile', () => {
+    component.firstname = 'John'; 
+    const errorResponse = { error: { message: 'Update failed' } };
+    
+    apiService.updateProfile.and.returnValue(throwError(() => errorResponse));
+
+    component.updateProfile();
+
+    expect(component.isFetching()).toBeFalse();
+    expect((component as any).messageService.add).toHaveBeenCalledWith(
+      jasmine.objectContaining({ severity: 'error', detail: 'Update failed' })
+    );
+  });
+
+  it('should not update password if required fields are empty', () => {
+    component.oldpassword = ''; // Missing old password
+    component.newpassword = 'pass';
+    component.confirmpassword = 'pass';
+
+    component.updatePassword();
+
+    expect(apiService.updatePassword).not.toHaveBeenCalled();
+    expect(component.isFetching()).toBeFalse();
+  });
+
+  it('should handle error when updating password', () => {
+    component.oldpassword = 'old';
+    component.newpassword = 'new';
+    component.confirmpassword = 'new';
+    
+    const errorResponse = { error: { message: 'Wrong old password' } };
+    apiService.updatePassword.and.returnValue(throwError(() => errorResponse));
+
+    component.updatePassword();
+
+    expect(component.isFetching()).toBeFalse();
+    expect((component as any).messageService.add).toHaveBeenCalledWith(
+      jasmine.objectContaining({ severity: 'error', detail: 'Wrong old password' })
+    );
+  });
+
+  it('should use default error message when API error object is empty', () => {
+    const emptyError = { status: 500, error: null }; 
+    apiService.profile.and.returnValue(throwError(() => emptyError));
+
+    component.fetchProfile();
+
+    expect((component as any).messageService.add).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        severity: 'error',
+        detail: 'An unexpected error occurred'
+      })
+    );
+  });
+
   it('should not update profile when all fields are empty', () => {
     component.updateProfile();
 

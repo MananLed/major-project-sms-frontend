@@ -77,6 +77,124 @@ describe('NoticeComponent', () => {
     expect(component.months.length).toBe(2);
   });
 
+  it('should manage dialog visibility', () => {
+    component.showDialog();
+    expect(component.visible).toBeTrue();
+
+    component.hideDialog();
+    expect(component.visible).toBeFalse();
+  });
+
+  it('should filter years based on query', () => {
+    // Setup initial data
+    component.years = ['2023', '2024'];
+    
+    // Simulate typing "2024"
+    const event = { query: '2024' } as any; 
+    component.filterYears(event);
+
+    // Verify transformation
+    expect(component.filteredYears.length).toBeGreaterThan(0);
+    expect(component.filteredYears[0].label).toBeDefined();
+    expect(component.filteredYears[0].value).toBeDefined();
+  });
+
+  it('should filter months based on query', () => {
+    component.months = ['January', 'February'];
+    
+    const event = { query: 'Jan' } as any;
+    component.filterMonths(event);
+
+    expect(component.filteredMonths.length).toBeGreaterThan(0);
+    expect(component.filteredMonths[0].value).toContain('Jan');
+  });
+
+  it('should search by Year only when Month is not selected', () => {
+    // Arrange
+    component.selectedYear = '2024';
+    component.selectedMonth = '';
+    
+    apiService.searchNotice.and.returnValue(of(mockNoticeResponse));
+
+    // Act
+    component.searchNotice();
+
+    // Assert
+    expect(apiService.searchNotice).toHaveBeenCalledWith(null, '2024');
+    expect(component.societyNotices).toEqual(mockNoticeResponse);
+    expect(component.isFetching()).toBeFalse();
+    // Verify reset logic
+    expect(component.selectedYear).toBe('');
+  });
+
+  it('should search by Year and Month when both are selected', () => {
+    // Arrange
+    component.selectedYear = '2024';
+    component.selectedMonth = 'January';
+    
+    apiService.searchNotice.and.returnValue(of(mockNoticeResponse));
+
+    // Act
+    component.searchNotice();
+
+    // Assert
+    expect(apiService.searchNotice).toHaveBeenCalledWith('January', '2024');
+    expect(component.societyNotices).toEqual(mockNoticeResponse);
+    expect(component.isFetching()).toBeFalse();
+  });
+
+  it('should handle error during search', () => {
+    // Arrange
+    component.selectedYear = '2024';
+    component.selectedMonth = 'January';
+    
+    const errorRes = { error: { message: 'Search failed' } };
+    apiService.searchNotice.and.returnValue(throwError(() => errorRes));
+
+    // Act
+    component.searchNotice();
+
+    // Assert
+    expect((component as any).messageService.add).toHaveBeenCalledWith(
+        jasmine.objectContaining({ severity: 'error', detail: 'Search failed' })
+    );
+    expect(component.isFetching()).toBeFalse();
+    expect(component.selectedYear).toBe('');
+  });
+
+  it('should use default error message when API error object is empty', () => {
+    // Arrange
+    const emptyError = { status: 500, error: null }; 
+    apiService.getNotices.and.returnValue(throwError(() => emptyError));
+
+    // Act
+    component.fetchNotices();
+
+    // Assert
+    expect((component as any).messageService.add).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        severity: 'error',
+        detail: 'An unexpected error occurred'
+      })
+    );
+  });
+
+  it('should set flags correctly for RESIDENT role', () => {
+    // Arrange
+    authService.getRole.and.returnValue('RESIDENT');
+    authService.isAdmin.and.returnValue(false);
+    authService.isOfficer.and.returnValue(false);
+    authService.isResident.and.returnValue(true);
+
+    // Act
+    component.ngOnInit();
+
+    // Assert
+    expect(component.userRole).toBe('RESIDENT');
+    expect(component.isAdmin).toBeFalse();
+    expect(component.isResident).toBeTrue();
+  });
+
   it('should set user role flags correctly', () => {
     expect(component.userRole).toBe('ADMIN');
     expect(component.isAdmin).toBeTrue();
